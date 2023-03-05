@@ -1,0 +1,493 @@
+FUNCTIONS:
+----------
+A function is a sub program, which executes whenever we call it and returns a value to the calling place.
+
+These functions are classified into two types
+
+	1.Predefined   functions
+	2.User defined functions
+
+1.Predefined functions:
+
+These functions are again classified into two types
+
+	a).Group or Aggregate Functions
+	b).Single row Functions
+
+a).Aggregate Functions
+
+These functions are also referred to as group functions. They return a value based on the values in a column. 
+
+-->COUNT
+
+               The function COUNT returns the number of rows that satisfy the condition in the WHERE clause.
+
+               Say you wanted to know how many employees are there. 
+ 
+               SQL> SELECT COUNT(*) FROM EMP;
+
+               OUTPUT:
+ 
+               COUNT(*)
+               --------
+               14
+
+              ANALYSIS:
+              It counts if row presents in the table
+
+ 
+              SQL> SELECT COUNT(COMM) FROM EMP;
+
+              COUNT(*)
+              --------
+               4
+
+
+            SQL> SELECT COUNT(*)  FROM EMP WHERE JOB = ‘MANAGER’;
+
+            COUNT(*)
+             -------
+             4
+
+           ANALYSIS:
+           It counts only managers
+
+
+--->SUM :
+     --------
+           It returns the sum of all values in a column. 
+
+          SQL> SELECT SUM(SAL) FROM EMP;
+          
+          OUTPUT:
+          SUM(SAL)
+          -------------
+          29025
+          ANALYSIS
+ 
+
+ ---->AVG :
+         --------
+         The AVG function computes the average of a column. 
+
+         SQL> SELECT AVG(sal) FROM EMP;
+
+          OUTPUT:
+          AVG(sal)
+          ----------
+          2073.21429
+
+          ANALYSIS
+          Find the average salary of all the employees
+
+--->MAX :
+--------
+          The Max function returns max value in the column.
+          
+           SQL> SELECT MAX(SAL) FROM EMP;
+          
+           OUTPUT:
+           MAX(SAL)
+           ---------------
+            5000
+          ANALYSIS:
+          Takes the value from one different rows from one particular           column
+              
+          SQL> SELECT MAX (hiredate) FROM EMP;
+
+          OUTPUT:
+
+          MAX(HIREDATE)
+           -------------
+           12-JAN-83
+
+---->MIN :
+        -------
+           SQL> SELECT MIN(SAL) FROM EMP;
+  
+           OUTPUT:
+
+            MIN(SAL)
+            --------
+             800
+
+             SQL>SELECT SUM(SAL),AVG(SAL),MIN(SAL),
+                     MAX(SAL),COUNT(*) FROM EMP;
+
+              OUTPUT
+  SUM(SAL)        AVG(SAL)            MIN(SAL)      MAX(SAL)   COUNT(*)
+--------------   ---------------  -----------   --------------  ----
+   29025              2073.21429          800            5000               14
+
+                ANALYSIS:
+                All the aggregate functions can be used together in a single                 SQL statement
+
+
+b)SINGLE ROW FUNCTIONS:
+------------------------------
+
+These functions work on each and every row and return a value to the calling places.
+
+These functions are classified into different types
+
+	1.Arithmetic Functions/Mathematical Functions
+	2.Character Functions
+	3.Date functions
+	4.Miscellaneous Functions
+
+1.Arithmetic Functions
+
+Many of the uses you have for the data you retrieve involve mathematics. Most Implementations of SQL provide arithmetic functions similar to that of operators covered here. 
+
+       -->ABS
+  
+           The ABS function returns the absolute value of the number you point to. 
+For example:
+             INPUT:
+             SQL> SELECT ABS(-10) FROM dual;
+ 
+               OUTPUT
+               ABS(-10)
+               ----------
+               10
+ANALYSIS
+
+ABS changes all the negative numbers to positive and leaves positive numbers alone.
+
+Note:
+Dual is a system table or dummy table from where we can display system information (i.e. system date and username etc) or we can make our own calculations.
+
+--->MOD
+        It returns remainder when we divide one value with another value
+        SQL> SELECT MOD(5,2) FROM DUAL;
+      
+        OUTPUT:
+        MOD(5,2)
+         --------------
+             1
+
+         SQL> SELECT MOD(2,5) FROM DUAL;
+         OUTPUT:
+         MOD(2,5)
+         ---------------
+             2
+         ANALYSIS
+         When numerator value less than denominator, it returns                    numerator value as remainder.
+
+--->POWER
+          To raise one number to the power of another, use POWER. In this            function the first argument is raised to the power of the second:
+      
+           SQL> SELECT POWER(5,3) FROM DUAL;
+
+           OUTPUT:
+           125
+
+--->SQRT
+
+            The function SQRT returns the square root of an argument.              Because the square root of a negative number is undefined, you              cannot use SQRT on negative numbers.
+ 
+             SQL> SELECT SQRT(4) FROM DUAL;
+-->CEIL
+            The function returns upper value of the given value.
+            SQL>SELECT CEIL(5.34) FROM DUAL;
+ 
+           OUTPUT:
+           6
+
+--->FLOOR
+            The function returns lower value of given value.
+             SQL>SELECT FLOOR(5.34) FROM DUAL;
+
+             OUTPUT:
+             5       
+2).Conversion Functions
+-------------------------------
+
+These functions provide a handy way of converting one type of data to another. They are mainly useful for changing date formats and number formats.
+
+-->TO_CHAR
+
+The primary use of TO_CHAR is to convert a number into a character. Different Implementations may also use it to convert other data types, like Date, into a character, or to include different formatting arguments. 
+
+The following example illustrates the primary use of TO_CHAR:
+SQL> SELECT SAL, TO_CHAR(SAL) FROM EMP;
+
+ANALYSIS
+
+After conversion, Converted information is left aligned. So we can say that it is a string.
+
+The main usage of this function is, to change the date formats and number formats
+
+SQL> SELECT SYSDATE,TO_CHAR(SYSDATE,’DD/MM/YYYY’) FROM DUAL;
+
+OUTPUT:
+SYSDATE       TO_CHAR(SYSDATE,'DD/MM/YYYY')
+---------              ------------------------------
+24-MAR-07      24/03/2007
+
+ANALYSIS
+
+Convert the default date format to DD/MM/YYYY format
+
+
+SQL> SELECT SYSDATE,TO_CHAR(SYSDATE,’DAY MONTH YEAR’) FROM DUAL;
+
+OUTPUT:
+SYSDATE       TO_CHAR(SYSDATE,'DAYMONTHYEAR')
+---------              ------------------------------
+24-MAR-07      SATURDAY  MARCH TWO THOUSAND SEVEN
+
+
+ANALYSIS:
+DAY               gives the total day name
+MONTH         gives the total month name
+YEAR             writes the year number in words
+
+SQL> SELECT HIREDATE,TO_CHAR(HIREDATE,’DDSPTH MONTH YEAR’) FROM EMP;
+ANALYSIS:
+Converts all hire dates in EMP table into Words
+
+SQL> SELECT TO_CHAR(SYSDATE,’HH:MI:SS AM’) FROM DUAL;
+
+OUTPUT:
+TO_CHAR(SYS
+-----------
+08:40:17 PM
+
+ANALYSIS:
+
+HH    returns Hours       
+MI    returns Minutes     
+SS    returns Seconds     
+AM returns AM / PM depends on Time
+
+SQL> SELECT TO_CHAR(SYSDATE,’HH24:MI:SS’) FROM DUAL;
+
+OUTPUT:
+TO_CHAR(
+--------
+20:43:12
+ANALYSIS:
+
+HH24    returns Hours in 24 hour format     
+MI    returns Minutes                                   
+SS    returns Seconds    
+
+TO_NUMBER
+
+TO_NUMBER is the companion function to TO_CHAR, and of course, it converts a string into a number. 
+
+SQL> SELECT SAL, TO_NUMBER((TO_CHAR(SAL))) FROM EMP;
+ANALYSIS
+
+After conversion, Converted information is right aligned. So we can say that it is a number.
+
+3).Date and Time Functions
+------------------------------------
+We live in a civilization governed by times and dates, and most major implementations of SQL have functions to cope with these concepts. 
+
+It demonstrates the time and date functions.
+
+--->ADD_MONTHS
+         This function adds a number of months to a specified          date. 
+
+For example, say a customer deposited some amount on a particular date for a period of 6 months. To find the maturity date of the deposit
+
+INPUT:
+SQL> SELECT ADD_MONTHS (SYSDATE, 6) MATURITY_DATE FROM DUAL;
+OUTPUT:
+
+MATURITY_DATE
+--------------------
+24-SEP-07
+
+ANALYSIS
+    It adds 6 months to the system date
+
+
+SQL> SELECT HIREDATE, ADD_MONTHS(HIREDATE,33*12) RETIRE_DATE  FROM EMP;
+
+ANALYSIS
+Find the retirement date of an employee
+Assume, 33 years of service from date of join is retirement date
+
+--->LAST_DAY
+
+LAST_DAY returns the last day of a specified month. 
+For example, you need to know what the last day of the month 
+SQL> SELECT LAST_DAY(SYSDATE) FROM DUAL;
+OUTPUT:
+
+LAST_DAY(SYSDATE)
+-------------------------
+31-MAR-07
+
+ANALYSIS
+   Find the last date of the month
+
+--->MONTHS_BETWEEN
+Used to find the number of months between two given months
+
+INPUT:
+SQL> SELECT ENAME,MONTHS_BETWEEN(SYSDATE,HIREDATE)/12
+   EXPERIENCE FROM EMP;
+OUTPUT:
+
+ANALYSIS
+Finds number of months between sysdate and hiredate . Result is divided with 12 to get the experience
+
+-->LOCALTIMESTAMP
+
+Returns Local timestamp in the active time zone, with no time zone information shown
+
+SQL> SELECT LOCALTIMESTAMP FROM DUAL;
+
+OUTPUT
+
+LOCALTIMESTAMP
+------------------------------------
+05-MAR-08 06.21.02.312000 PM
+
+EXTRACT
+
+We can use Extract function in the place of to_char function from Oracle 9i.
+
+SELECT EXTRACT(MONTH FROM SYSDATE) FROM DUAL;
+
+
+4).Miscellaneous Functions
+
+GREATEST and LEAST
+
+SELECT GREATEST(10,1,83,2,9,67) FROM DUAL;
+OUTPUT:
+
+GREATEST
+---------
+   83
+ANALYSIS
+
+Displays the greatest of the given set of values
+
+Difference between GREATEST AND MAX IS
+1)	GREATEST IS SINGLE ROW FUNCTION, MAX IS A GROUP FUNCTION
+2)	GREATEST TAKES VALUES FROM DIFFERENT COLUMNS FROM EACH ROW, WHERE AS MAX TAKES VALUES FROM
+DIFFERENT ROWS FROM A COLUMN.
+
+USER
+
+USER returns the character name of the current user of the database.
+
+INPUT:
+SQL> SELECT USER FROM DUAL;
+OUTPUT:
+
+USER
+--------
+SCOTT
+
+ANALYSIS
+Displays the current sessions user name
+We can also display username using environment command
+ SQL> SHOW USER
+
+The DECODE Function
+
+The DECODE function is one of the most powerful commands in SQL*Plus--and perhaps the most powerful. The standard language of SQL lacks procedural functions that are contained in languages such as COBOL and C.
+The DECODE statement is similar to an IF...THEN statement in a procedural programming language. Where flexibility is required for complex reporting needs, DECODE is often able to fill the gap between SQL and the functions of a procedural language.
+SYNTAX:
+DECODE (column1, value1, output1, value2, output2, output3);
+
+The syntax example performs the DECODE function on column1. 
+
+If column1 has a value of value1, then display output1 instead of the column's current value. 
+
+If column1 has a value of value2, then display output2 instead of the column's current value. 
+
+If column1 has a value of anything other than value1 or value2, then display output3 instead of the column's current value.
+
+INPUT
+SQL> SELECT ENAME,JOB,DECODE(JOB,’CLERK’,’EXEC’,’SALESMAN’,   
+‘S.OFFICER’,’ANALYST’,’PM’,’MANAGER’,’VP’,JOB) PROMOTION FROM EMP;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ANALYSIS
+When JOB has a value CLERK , then display EXEC instead of CLERK
+When JOB has a value SALESMAN , then display S.OFFICER instead of SALESMAN
+When JOB has a value ANALYST , then display PM instead of ANALYST
+When JOB has a value MANAGER , then display VP instead of MANAGER
+OTHERWISE DISPLAY SAME JOB
+
+INPUT
+SQL> SELECT ENAME,JOB,SAL,DECODE(JOB,’CLERK’,SAL*1.1,’SALESMAN’,   
+SAL*1.2,’ANALYST’,SAL*1.25,’MANAGER’,SAL*1.3,SAL)  NEW_SAL FROM EMP;
+
+ANALYSIS
+When JOB has a value CLERK , then giving 10% increment
+When JOB has a value SALESMAN , then giving 20% increment
+When JOB has a value ANALYST , then giving 25% increment
+When JOB has a value MANAGER , then giving 30% increment
+OTHERWISE no increment
+
+Assume there is a table with   empno,ename,sex
+
+SQL> SELECT ENAME,SEX,DECODE(SEX,’MALE’,’MR.’||ENAME,
+           ‘MS.’||ENAME) FROM EMP;
+
+ANALYSIS
+Adding Mr.’ or ‘Ms.’ before the name based on their Gender
+
+GROUP BY CLAUSE
+-------------------------------
+Group by statement groups all the rows with the same column value.
+Use to generate summary output from the available data.
+Whenever we use a group function in the SQL statement, we have to use a group by clause.
+INPUT
+SQL> SELECT JOB, COUNT (*) FROM EMP GROUP BY JOB;
+ANALYSIS
+Counts number of employees under each and every job.
+When we are grouping on job, initially jobs are placed in ascending order in a temporary segment. 
+On the temporary segment, group by clause is applied, so that on each similar job count function applied. 
+INPUT
+SQL> SELECT JOB, SUM (SAL) FROM EMP GROUP BY JOB;
+ANALYSIS
+With each job, it finds the total salary
+
+INPUT
+SQL> SELECT JOB, MIN(SAL),MAX(SAL) FROM EMP GROUP BY JOB;
+ANALYSIS
+With each job, it finds the MINIMUM AND MAXIMUM SALARY
+
+
+POINTS TO REMEMBER
+
+WHERE clause can be used to check for conditions based on values of columns and expressions but not the result of GROUP functions.
+HAVING clause is specially designed to evaluate the conditions that are based on group functions such as SUM , COUNT etc.
+HAVING clause can be used only when GROUP BY clause is used.
+
+ORDER OF EXECUTION
+
+Here are the rules ORACLE uses to execute different clauses given in SELECT command
+
+Selects rows based on Where clause
+Groups rows based on GROUP BY clause
+Calculates results for each group
+ORDER BY is used to order the results
+
+Nested Sub queries
+

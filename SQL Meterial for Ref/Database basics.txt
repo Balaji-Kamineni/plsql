@@ -1,0 +1,50 @@
+Database
+========
+It is a collection of  related data of an enterprise in a particular subject/domain.
+
+It is a collection of data in an organized manner in a persistence media so that storing and retrieving data would be easier.
+
+Size of the database is not fixed, it can vary.
+
+A database can be generated and maintained  manually or by computer.
+
+Example: Dictionary, Telephone directory,Library card catalog.
+
+DBMS(Database Management System)
+================================
+It is a collection of programs(software) which is used to create, manipulate(insert,update,delete,retrieve) data in a database.
+
+It also facilitates the process of defining ,constructing, manipulating and sharing databases among various users and applications.
+
+Example: Oracle, SqlServer, MySql etc.
+
+Applications of Database systems
+==================================
+Banking: For customer information , accounts, loans, transaction etc.
+
+Airlines: For reservation and schedule information
+
+Universities: For student information, examination information, department information etc.
+
+Human Resource: Information about employees,salaries,benefits etc.
+
+
+Basic Terminologies in Database
+===============================
+Informal	Formal
+========	======
+
+Table		- Relation
+column		- attributes/domain
+row 		- tuple
+Table 
+definition      - schema of a relation
+No.of Columns	- Degree of table
+No.of Rows	- Cardinality
+
+Database:
+A database consisits of multiple relations.
+
+Information about an enterprise is broken up into no of parts, with each relation storing one part of the information.
+Account
+Customer

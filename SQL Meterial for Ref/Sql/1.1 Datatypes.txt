@@ -1,0 +1,47 @@
+Oracle Datatypes
+
+Each column value and constant in a SQL statement has a data type, which is associated with a specific storage format, constraints, and a valid range of values. When you create a table, you must specify a data type for each of its columns. Oracle provides the following built-in data types.
+
+1) Char:* it can accommodate the alphanumeric data
+	* The Default and min size is 1 byte(1 character)
+	* Max size is 256 bytes
+
+	  sname char(10)
+
+2) Varchar2 : 
+* It can accommodate the alphanumeric data
+* The size must be specified
+* Max size is 4000 bytes
+	
+address varchar2(20)
+
+3) Number :
+	* Holds only numeric data.
+	* Max , default size is 38 digits.
+	
+	Syntax:  number (scale, [precession])
+
+	Ex : price in a supermarket
+                              Price number (6,2)
+4) Date: 
+	*Holds date and time values	
+	*Default & fixed size is 7 bytes
+	*Default date format is dd-mon-yy
+			  (12-Mar-08)
+5) Long :
+
+* Holds huge amt. of textual information
+* Max. Size is 2 G.B
+	
+ Restrictions:
+
+* We can't use this for multiple times. Only one time/table we can use 
+* The long field must not be indexed
+* We must not give the unique constraint on it.
+
+6) LOBS ( Large Objects):
+	
+BLOB    : Binary Large Object
+CLOB    : Character Large Object
+NCLOB   : Used to hold multi byte character set
+BFILE   : Binary File 

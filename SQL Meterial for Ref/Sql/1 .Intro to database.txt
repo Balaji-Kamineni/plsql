@@ -1,0 +1,33 @@
+Evolution of Data base :
+		The first data storage systems were based on discrete files.
+In this file-oriented system, a bunch of files would be stored on a computer and could be accessed by a computer operator.
+The "flat file" system was a start. However, it was seriously inefficient because, in order to find a record, someone would have to read through the entire file if it was the last record.
+other problems of files:
+slow retrieval , slow insertions, updations etc..
+In 1960's Databases were created to solve the problems with file-oriented systems in that they were compact, fast, easy to use, current, accurate, allowed the easy sharing of data between multiple users, and were secure.
+
+what is a database:
+ Database is a collection of information in a structured way. We can say that it is a collection of a group of facts.  ---personal address book is a database of names you like to keep track of, such as personal friends and members of your family.
+Fields:
+take an example of table with 6 columns rollno, name ,date of birth ,gender , address and subjects.
+There are six pieces of information on each student. They are Roll No, Name, Date of birth, gender, Address and Subjects. Each piece of information in database is called a Field.Thus there are six fields in this database.
+All the related fields for a particular event is called a Record. In the example above, all six fields taken together for a particular student is called a record of that student. Thus, we can define record as a collection of logically related fields.
+		(OR)
+A database is a collection of database files, and each database file is a collection of records.
+
+relational Database
+
+RDBMS: (Relational Database Management System)
+Data management involves creating, modifying, deleting and adding data in files, and using this data to generate reports or answer queries. The software that allows us to perform these functions easily is called a Data Base Management System (DBMS). Using a DBMS data can be retrieved easily and effectively. 
+
+The Relational Model
+The big step forward in database technology was the development of the relational
+database model. The relational database derives from work done in the late 1960s by
+E.F. Codd, a mathematician at IBM. His model is based on the mathematics of set theory and predicate logic.
+
+Codd's model covers the three primary requirements of a relational database:
+structure, integrity, and data manipulation. The fundamentals of the relational model
+are as follows:
+1) A relational database consists of a number of unordered tables.
+2) The structure of these tables is independent of the physical storage medium used to store the data.
+3) The contents of the tables can be manipulated using non-procedural operations that return tables.

@@ -1,0 +1,13 @@
+starting the Database (oracle 10g express edition)
+start --> all Programs --> oracle 10g database express edition -- > start database
+to create a new user to login in the database 
+start --> all Programs --> oracle 10g database express edition -- > go to Database Home page
+login page will appear :
+by default two users will be created when database is installed 'sys' and 'system' ( DBA users) and while installing it will ask for a password. type any one of the users ('sys' or 'system') and password to login.
+select administration icon and select create user in it ..  then specify the user Id and Password. Check the user priviliges in the user creation page to create  new user.
+so this user name and password can be used to login in the database.
+cmd>sqlplus
+username: sys
+password: sys
+
+sql>

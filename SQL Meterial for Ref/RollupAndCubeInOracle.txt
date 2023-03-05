@@ -1,0 +1,259 @@
+Group by
+========
+SELECT DeptNo, SUM(Sal) FROM Emp
+GROUP BY DeptNo ORDER BY DeptNo;
+
+DEPTNO   SUM(SAL)
+---------- ----------
+        10       8750
+        20      10875
+        30       9400
+        60        800
+
+Group by with ROLLUP with Single Column grouping
+================================================
+SELECT DeptNo,SUM(Sal) FROM Emp
+GROUP BY ROLLUP(DeptNo) ORDER BY DeptNo;
+
+ DEPTNO   SUM(SAL)
+---------- ----------
+        10       8750 =>Sub Totals
+        20      10875
+        30       9400
+        60        800
+                29825 => Grand Total
+
+Group by with CUBE with Single Column grouping
+==============================================
+SELECT DeptNo,SUM(Sal) FROM Emp
+GROUP BY CUBE(DeptNo) ORDER BY DeptNo;
+
+ DEPTNO   SUM(SAL)
+---------- ----------
+        10       8750 =>Sub Totals
+        20      10875
+        30       9400
+        60        800
+                29825 => Grand Total
+
+Group by with ROLLUP with Multiple Column grouping
+===================================================
+SELECT DeptNo,Job,Sum(Sal),Count(*)
+FROM Emp
+GROUP By ROLLUP(DeptNo,Job)
+ORDER BY DeptNo,Job
+
+ DEPTNO JOB         SUM(SAL)   COUNT(*)
+---------- --------- ---------- ----------
+        10 CLERK           1300          1
+        10 MANAGER         2450          1
+        10 PRESIDENT       5000          1
+        10                 8750          3
+        20 ANALYST         6000          2
+        20 CLERK           1900          2
+        20 MANAGER         2975          1
+        20                10875          5
+        30 CLERK            950          1
+        30 MANAGER         2850          1
+        30 SALESMAN        5600          4
+
+    DEPTNO JOB         SUM(SAL)   COUNT(*)
+---------- --------- ---------- ----------
+        30                 9400          6
+        60 clerk            800          1
+        60                  800          1
+                          29825         15
+
+Group by with CUBE with Multiple Column grouping
+===================================================
+SELECT DeptNo,Job,Sum(Sal),Count(*),
+GROUPING_ID(DeptNO,Job) AS GroupLabel
+FROM Emp
+GROUP By CUBE(DeptNo,Job)
+ORDER BY DeptNo,Job
+
+ DEPTNO JOB         SUM(SAL)   COUNT(*) GROUPLABEL
+---------- --------- ---------- ---------- ----------
+        10 CLERK           1300          1          0-Total
+        10 MANAGER         2450          1          0
+        10 PRESIDENT       5000          1          0
+        10                 8750          3          1-subtotal
+        20 ANALYST         6000          2          0
+        20 CLERK           1900          2          0
+        20 MANAGER         2975          1          0
+        20                10875          5          1
+        30 CLERK            950          1          0
+        30 MANAGER         2850          1          0
+        30 SALESMAN        5600          4          0
+
+    DEPTNO JOB         SUM(SAL)   COUNT(*) GROUPLABEL
+---------- --------- ---------- ---------- ----------
+        30                 9400          6          1
+        60 clerk            800          1          0
+        60                  800          1          1
+           ANALYST         6000          2          2-jobSubTotal
+           CLERK           4150          4          2
+           MANAGER         8275          3          2
+           PRESIDENT       5000          1          2
+           SALESMAN        5600          4          2
+           clerk            800          1          2
+                          29825         15          3-GrandTotal
+
+
+CUBE with Customized label for Grouping_ID
+==========================================
+SELECT DeptNo,Job,Sum(Sal),Count(*),
+CASE GROUPING_ID(DeptNO,Job) 
+	WHEN 0 THEN 'ByJobInDept'
+	WHEN 1 THEN 'ByDept'
+	WHEN 2 THEN 'ByJob'
+	WHEN 3 THEN 'GrandTotal'
+END 
+AS GroupLabel
+FROM Emp
+GROUP By CUBE(DeptNo,Job)
+ORDER BY DeptNo,Job;
+
+ DEPTNO JOB         SUM(SAL)   COUNT(*) GROUPLABEL
+---------- --------- ---------- ---------- -----------
+        10 CLERK           1300          1 Total
+        10 MANAGER         2450          1 Total
+        10 PRESIDENT       5000          1 Total
+        10                 8750          3 SubTotal
+        20 ANALYST         6000          2 Total
+        20 CLERK           1900          2 Total
+        20 MANAGER         2975          1 Total
+        20                10875          5 SubTotal
+        30 CLERK            950          1 Total
+        30 MANAGER         2850          1 Total
+        30 SALESMAN        5600          4 Total
+
+    DEPTNO JOB         SUM(SAL)   COUNT(*) GROUPLABEL
+---------- --------- ---------- ---------- -----------
+        30                 9400          6 SubTotal
+        60 clerk            800          1 Total
+        60                  800          1 SubTotal
+           ANALYST         6000          2 JobSubTotal
+           CLERK           4150          4 JobSubTotal
+           MANAGER         8275          3 JobSubTotal
+           PRESIDENT       5000          1 JobSubTotal
+           SALESMAN        5600          4 JobSubTotal
+           clerk            800          1 JobSubTotal
+                          29825         15 GrandTotal
+
+MERGE
+=====
+The Oracle MERGE statement selects data from one or more source tables and updates or inserts it into a target table. The MERGE statement allows you to specify a condition to determine whether to update data from or insert data into the target table.
+
+The following illustrates the syntax of the Oracle MERGE statement:
+
+MERGE INTO target_table 
+USING source_table 
+ON search_condition
+    WHEN MATCHED THEN
+        UPDATE SET col1 = value1, col2 = value2,...
+        WHERE <update_condition>
+        [DELETE WHERE <delete_condition>]
+    WHEN NOT MATCHED THEN
+        INSERT (col1,col2,...)
+        values(value1,value2,...)
+        WHERE <insert_condition>;
+
+First, specify the target table (target_table) which you want to update or insert into in the INTO clause.
+
+Second, specify the source of data (source_table) to be updated or inserted in the USING clause.
+
+Third, specify the search condition upon which the merge operation either updates or inserts in the ON clause.
+
+For each row in the target table, Oracle evaluates the search condition:
+
+    If the result is true, then Oracle updates the row with the corresponding data from the source table.
+    In case the result is false for any rows, then Oracle inserts the corresponding row from the source table into the target table.
+
+The MERGE statement becomes convenient when you want to combine multiple INSERT, UPDATE, and DELETE statements in a single operation.
+
+Suppose, we have two tables: members and member_staging.
+
+We insert a new row to the members table whenever we have a new member. Then, the data from the members table is merged with the data of the member_staging table.
+
+The following statements create the members and member_staging tables:
+
+CREATE TABLE members (
+    member_id NUMBER PRIMARY KEY,
+    first_name VARCHAR2(50) NOT NULL,
+    last_name VARCHAR2(50) NOT NULL,
+    rank VARCHAR2(20)
+);
+
+CREATE TABLE member_staging AS 
+SELECT * FROM members;
+Code language: SQL (Structured Query Language) (sql)
+
+The following INSERT statements insert sample data into the members and member_staging tables:
+
+INSERT INTO members(member_id, first_name, last_name, rank) VALUES(1,'Abel','Wolf','Gold');
+INSERT INTO members(member_id, first_name, last_name, rank) VALUES(2,'Clarita','Franco','Platinum');
+INSERT INTO members(member_id, first_name, last_name, rank) VALUES(3,'Darryl','Giles','Silver');
+INSERT INTO members(member_id, first_name, last_name, rank) VALUES(4,'Dorthea','Suarez','Silver');
+INSERT INTO members(member_id, first_name, last_name, rank) VALUES(5,'Katrina','Wheeler','Silver');
+INSERT INTO members(member_id, first_name, last_name, rank) VALUES(6,'Lilian','Garza','Silver');
+INSERT INTO members(member_id, first_name, last_name, rank) VALUES(7,'Ossie','Summers','Gold');
+INSERT INTO members(member_id, first_name, last_name, rank) VALUES(8,'Paige','Mcfarland','Platinum');
+INSERT INTO members(member_id, first_name, last_name, rank) VALUES(9,'Ronna','Britt','Platinum');
+INSERT INTO members(member_id, first_name, last_name, rank) VALUES(10,'Tressie','Short','Bronze');
+
+-- insert into member_staging table
+INSERT INTO member_staging(member_id, first_name, last_name, rank) VALUES(1,'Abel','Wolf','Silver');
+INSERT INTO member_staging(member_id, first_name, last_name, rank) VALUES(2,'Clarita','Franco','Platinum');
+INSERT INTO member_staging(member_id, first_name, last_name, rank) VALUES(3,'Darryl','Giles','Bronze');
+INSERT INTO member_staging(member_id, first_name, last_name, rank) VALUES(4,'Dorthea','Gate','Gold');
+INSERT INTO member_staging(member_id, first_name, last_name, rank) VALUES(5,'Katrina','Wheeler','Silver');
+INSERT INTO member_staging(member_id, first_name, last_name, rank) VALUES(6,'Lilian','Stark','Silver');
+
+When updating data from the members table to member_staging table, we should perform the following actions:
+
+    We update the rows with member id 1, 3, 4, and 6 because the rank or the last name of these members in these tables are different.
+    We insert the rows with member id 7 to 10 are because these rows exist in the members table but not in the member_staging table.
+
+In total 8 rows should be merged.
+
+MERGE INTO member_staging x
+USING (SELECT member_id, first_name, last_name, rank FROM members) y
+ON (x.member_id  = y.member_id)
+WHEN MATCHED THEN
+    UPDATE SET x.first_name = y.first_name, 
+                        x.last_name = y.last_name, 
+                        x.rank = y.rank
+    WHERE x.first_name <> y.first_name OR 
+           x.last_name <> y.last_name OR 
+           x.rank <> y.rank 
+WHEN NOT MATCHED THEN
+    INSERT(x.member_id, x.first_name, x.last_name, x.rank)  
+    VALUES(y.member_id, y.first_name, y.last_name, y.rank);
+
+The merge statement compares each row in the members table with each row in the member_staging table based on the values in the member_id columns (see the ON clause above).
+
+If the values in member_id columns of both tables are equal, the MERGE statement updates the first name, last name, and rank from the members table to the member_stagingtable only if the values of first name, last name, or rank columns of both tables are different.
+
+Otherwise, it inserts the row from the members table into the member_staging table.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

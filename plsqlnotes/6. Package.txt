@@ -1,0 +1,158 @@
+Syntax for Package:
+-------------------
+Package Specification:
+
+CREATE OR REPLACE PACKAGE <package-name>
+IS
+	PROCEDURE calculate(p_num IN NUMBER);
+	FUNCTION fact(p_num IN NUMBER) RETURN NUMBER;
+END <package-name>;
+
+Package Body:
+
+CREATE OR REPLACE PACKAGE BODY <package-name> 
+AS 
+
+  PROCEDURE calculate(p_num IN NUMBER)
+  IS
+     --Declaration Section
+  BEGIN
+     --Execution Section
+  END calculate;
+
+  FUNCTION fact(p_num IN NUMBER) RETURN NUMBER
+  IS
+     --Declaration Section
+  BEGIN
+     --Executin Section;
+  END fact; 
+
+END PACK;
+/
+
+
+Package Specifcation
+====================
+CREATE OR REPLACE PACKAGE pkg_ems
+IS
+       PROCEDURE getEmployees(p_deptno IN emp.deptno%type);
+       FUNCTION  getTotalSalary(p_deptno IN emp.deptno%type) RETURN NUMBER;
+END pkg_ems;
+
+
+Package Body
+============
+CREATE OR REPLACE PACKAGE BODY pkg_ems
+AS
+	PROCEDURE getEmployees(p_deptNo IN emp.deptno%type)
+	IS
+	  CURSOR emp_cursor 
+	  IS 
+	  SELECT * FROM emp WHERE deptno=p_deptno;
+	BEGIN
+	  FOR emp_rec IN emp_cursor
+           LOOP
+	      DBMS_OUTPUT.PUT_LINE(emp_rec.empno||' '||emp_rec.ename||' '||emp_rec.sal||' '||emp_rec.job||' '||emp_rec.deptno);
+           END LOOP; 
+	END getEmployees;
+
+	FUNCTION getTotalSalary(p_deptno IN emp.deptno%type)
+	RETURN NUMBER
+	IS
+	  v_totalSalary emp.sal%type;
+	  v_totalComm emp.comm%type;
+	BEGIN
+	   SELECT SUM(Sal) INTO v_totalSalary FROM Emp
+	   WHERE deptno=p_deptno;
+	   SELECT SUM(NVL(comm,0)) INTO v_totalComm FROM Emp
+	   WHERE deptno=p_deptno;	
+	   return v_totalSalary+v_totalComm;
+	END getTotalSalary;
+END pkg_ems;
+==================================================================
+
+Function Execution
+==================
+DECLARE
+v_totalsal NUMBER;
+BEGIN
+v_totalsal := pkg_ems.getTotalSalary(20);
+DBMS_OUTPUT.PUT_LINE(v_totalsal);
+END;
+
+Procedure Execution
+===================
+EXECUTE pkg_ems.getEmployees(20);
+
+
+Calling the functions from the Package.
+SQL> SELECT packageName.functionName(arg1,arg2) from dual;
+
+Executing a procedure from the package.
+SQL> EXECUTE packageName.procedureName(arg1, arg2);
+
+===============================
+
+Example to find the salary of the Employee using packages and exception handling:
+-----------------------------------------------------------
+create or replace PACKAGE PACK AS
+function addition (a number,b number) RETURN NUMBER;
+
+function fact (n number) return NUMBER;
+
+procedure proc1 ( var1 in number,
+                  var3 out number,
+                  sqlerr_msg  out varchar2
+                );
+END PACK;
+/
+
+create or replace PACKAGE BODY PACK AS
+
+  function addition (a number,b number) RETURN NUMBER AS
+   c number;
+  begin
+  c:=a+b;
+  return c;
+  END addition;
+
+  function fact (n number) return NUMBER AS
+f number := 1;
+i number;
+BEGIN
+if n < 0 then
+return -1;
+end if;
+for i in 1..n
+loop
+f := f * i;
+end loop;
+return f;
+  END fact;
+
+procedure proc1 ( var1 in number,
+                  var3 out number,
+                  sqlerr_msg  out varchar2
+                ) as
+begin
+
+select sal into var3 from emp where empno = var1;
+
+exception when no_data_found then
+ sqlerr_msg := 'There is no employee with id =' || var1;
+ when Others
+ then sqlerr_msg := 'Exception is handled' || sqlerrm;
+ 
+end proc1;                
+
+END PACK;
+/
+
+declare a number;
+b number;
+c varchar2(200);
+begin
+ pack.proc1(7369,  b ,  c);
+ dbms_output.put_line('Salary of emp is ' ||b);
+ dbms_output.put_line(c);
+end;

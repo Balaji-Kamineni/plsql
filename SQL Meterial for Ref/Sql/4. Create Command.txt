@@ -1,0 +1,82 @@
+DDL (Data Definition Language):
+
+create command:
+-----------------------
+create table 
+--- A table will be used to store relavent data in the database.
+--- A table will have number of columns in it.
+--- data in table is stored in the form of rows
+--- Table can hold more than one row of data.
+-- columns in the table can have different datatypes in it
+naming standards to create a table
+to create a table in the database relevant or identifiable name specific to its purpose should be proived so that it can be recognized.
+eg: student ,school
+best practice is to include the projectname ,module name in the table name 
+oracle allows maximum of 30 characters in the table name.
+underscores(_) can be used to differentiate a table name like sch_student_record.. etc...
+proper shortcuts (understandable ) should be used in names.
+table name should be unique (oracle doesnot allow multiple tables with same name).
+sch_lib_student ---> XXX_XXX_XXXX
+project_module_tableName
+
+to create a table syntax
+
+create table tablename (column1 datatype(size),column2 datatype(size)......... );
+
+create tables in the database 
+steps
+1.install oracle in the system
+2. the oracle should be up and running.
+3.go the command prompt 
+type sqlplus
+enter User name 
+enter password
+
+default user name is scott
+password of it is tiger
+
+-- or else any other user id and password can be entered.
+once sucessfully connecting will get like this
+
+SQL>
+
+command to see how many tables are present in the database user 
+SQL> select * from tab;
+it will display all the tables present in the database .
+from SQL if want to change to other user 
+SQL> conn username
+Enter password : 
+if both matches then the new user will be connected.
+query to create a table
+create table sch_student ( stud_id number(3),studname varchar2(40),stud_age number(3) , stud_class varchar2(20));
+
+it creates a table with 4 columns with no data in it .
+ to see the structure of the table once it has been created use the 'desc' command
+desc tablename;
+SQL> desc sch_student;
+it returns the table information like the column names, whether the column is nullable or not and the datatypes and size specified to each column.
+
+create command types 
+-------------------------------
+create table from existing table 
+
+create table new_tablename as select columnList from existing_tablename .
+example: 
+create table student_copy as select * from student;
+ the above command will create a new table student_copy with all the columns present in the student table and also all the rows (data ) will also be copied.
+
+creating a new user :
+---------------------------
+syntax:
+create  user <user_name> identified by <password>
+
+query to student orbit user with orbit password.
+
+create user orbit identified by orbit;
+
+>> once a user is created then it should be granted to connect to DB .
+query to grant connect :
+grant connect to orbit;
+>> to perform operations ( creating , alter, droping ,selecting etc  )on DB objects (table ,views etc) the user need resources to be granted .
+resources are granted by :
+sql>grant resources to orbit ;

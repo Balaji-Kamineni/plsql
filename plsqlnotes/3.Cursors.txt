@@ -1,0 +1,598 @@
+What is CURSOR in PL/SQL?
+========================
+A Cursor is a pointer to the context area. Oracle creates context area for processing an SQL statement which contains all information about the statement.
+
+PL/SQL allows the programmer to control the context area through the cursor. A cursor holds the rows returned by the SQL statement. The set of rows the cursor holds is referred as active set. These cursors can also be named so that they can be referred from another place of the code.     
+
+The cursor is of two types.
+    Implicit Cursor
+    Explicit Cursor
+
+Implicit Cursor
+----------------
+Whenever any DML operations occur in the database, an implicit cursor is created that holds the rows affected, in that particular operation. These cursors cannot be named and, hence they cannot be controlled or referred from another place of the code. We can refer only to the most recent cursor through the cursor attributes.
+
+
+Explicit Cursor
+---------------
+Programmers are allowed to create named context area to execute their DML operations to get more control over it. The explicit cursor should be defined in the declaration section of the PL/SQL block, and it is created for the 'SELECT' statement that needs to be used in the code.
+
+Below are steps that involved in working with explicit cursors. 
+
+    1. Declaring the cursor
+
+    Declaring the cursor simply means to create one named context area for the 'SELECT' statement that is defined in the declaration part. The name of this context area is same as the cursor name. 
+
+    2. Opening Cursor
+
+    Opening the cursor will instruct the PL/SQL to allocate the memory for this cursor. It will make the cursor ready to fetch the records. 
+
+    3. Fetching Data from the Cursor
+
+    In this process, the 'SELECT' statement is executed and the rows fetched is stored in the allocated memory. These are now called as active sets. Fetching data from the cursor is a record-level activity that means we can access the data in a record-by-record way.
+
+    Each fetch statement will fetch one active set and holds the information of that particular record. This statement is same as 'SELECT' statement that fetches the record and assigns to the variable in the 'INTO' clause, but it will not throw any exceptions. 
+
+    4. Closing the Cursor
+
+    Once all the record is fetched now, we need to close the cursor so that the memory allocated to this context area will be released. 
+
+Syntax:
+DECLARE
+  CURSOR <cursor_name> IS <SELECT statement>
+  <cursor_variable declaration>
+BEGIN
+  OPEN <cursor_name>;
+  FETCH <cursor_name> INTO <cursor_variable>;
+  .
+  .
+  CLOSE <cursor_name>;
+END;
+
+    In the above syntax, the declaration part contains the declaration of the cursor and the cursor variable in which the fetched data will be assigned.
+    The cursor is created for the 'SELECT' statement that is given in the cursor declaration.
+    In execution part, the declared cursor is opened, fetched and closed. 
+==============================
+--Retrieve Empno,Ename,Job of all the employees belong to dept 20
+DECLARE
+        CURSOR emp_cursor IS SELECT EmpNo,EName,Job FROM Emp WHERE DeptNo=20;
+        v_record emp_cursor%ROWTYPE;
+BEGIN
+       OPEN emp_cursor;
+       LOOP	
+         FETCH emp_cursor INTO v_record;
+	 IF NOT emp_cursor%FOUND THEN
+            EXIT;
+	 END IF;
+         DBMS_OUTPUT.PUT_LINE(v_record.empno||' '||v_record.ename||' '||v_record.job);
+       END LOOP;
+       CLOSE emp_cursor;
+END;
+=================================
+--Retrieve Empno,Ename,Job of all the employees belong to dept 20
+  2  DECLARE
+  3          CURSOR emp_cursor IS SELECT EmpNo,EName,Job FROM Emp WHERE DeptNo=20;
+  4          v_empno emp.empno%type;
+  5          v_ename emp.ename%type;
+  6          v_job   emp.job%type;
+  7  BEGIN
+  8         OPEN emp_cursor;
+  9         LOOP
+ 10           FETCH emp_cursor INTO v_empno,v_ename,v_job;
+ 11      IF NOT emp_cursor%FOUND THEN
+ 12              EXIT;
+ 13      END IF;
+ 14           DBMS_OUTPUT.PUT_LINE(v_empno||' '||v_ename||' '||v_job);
+ 15         END LOOP;
+ 16         CLOSE emp_cursor;
+ 17* END;
+=================================
+
+
+Cursor Attributes
+==================
+Both Implicit cursor and the explicit cursor has certain attributes that can be accessed. These attributes give more information about the cursor operations. Below are the different cursor attributes and their usage.
+
+Cursor Attribute 	Description
+%FOUND 			It returns the Boolean result 'TRUE' if the most recent 			fetch operation	fetched a record successfully, else it 			will return FALSE.
+
+%NOTFOUND 		This works oppositely to %FOUND it will return 'TRUE' 			if the most recent fetch operation could not able to 				fetch any ecord.
+
+%ISOPEN 		It returns Boolean result 'TRUE' if the given cursor is 						already opened,	else it returns 'FALSE'
+
+%ROWCOUNT 		It returns the numerical value. It gives the actual count 						of records that	got affected by the DML activity. 
+
+
+Explicit Cursor Attributes
+
+A cursor has four attributes to which you can reference in the following format:
+cursor_name%attribute
+
+where cursor_name is the name of the explicit cursor.
+
+1) %ISOPEN
+
+This attribute is TRUE if the cursor is open or FALSE if it is not.
+
+2) %FOUND
+
+This attribute has four values:
+
+    NULL before the first fetch
+    TRUE if a record was fetched successfully
+    FALSE if no row returned
+    INVALID_CURSOR if the cursor is not opened
+
+3) %NOTFOUND
+
+This attribute has four values:
+
+    NULL before the first fetch
+    FALSE if a record was fetched successfully
+    TRUE if no row returned
+    INVALID_CURSOR if the cursor is not opened
+
+3) %ROWCOUNT
+
+The %ROWCOUNT attribute returns the number of rows fetched from the cursor. If the cursor is not opened, this attribute returns INVALID_CURSOR.
+
+
+Example 1: In this example, we are going to see how to declare, open, fetch and close the explicit cursor.
+
+We will project all the employee's name from emp table using a cursor. We will also use cursor attribute to set the loop to fetch all the record from the cursor.
+
+DECLARE
+	CURSOR cur_emp IS SELECT ename FROM emp;
+	v_ename emp.ename%type;
+
+BEGIN
+	OPEN cur_emp;
+
+	LOOP
+		FETCH cur_emp INTO v_ename;
+		IF cur_emp%NOTFOUND THEN
+			EXIT;
+		END IF;
+		Dbms_output.put_line(‘Employee Fetched:‘||lv_ename);
+	END LOOP;
+
+	Dbms_output.put_line(‘Total rows fetched is‘||cur_emp%R0WCOUNT);
+	CLOSE cur_emp;
+END;
+=========================================================================
+Code Explanation:
+
+    Code line 2: Declaring the cursor cur_emp for statement 'SELECT ename FROM emp'.
+    Code line 3: Declaring variable v_ename.
+
+    Code line 5: Opening the cursor cur_emp.
+    Code line 6: Setting the Basic loop statement to fetch all the records in the 'emp' table.
+    Code line 7: Fetches the cur_emp data and assign the value to v_ename.
+    Code line 9: Using the cursor attribute '%NOTFOUND' to find whether all the record in the cursor is fetched. If fetched then it will return 'TRUE' and control will exit from the loop, else the control will keep on fetching the data from the cursor and print the data.
+    Code line 11: EXIT condition for the loop statement.
+    Code line 12: Print the fetched employee name.
+    Code line 14: Using the cursor attribute '%ROWCOUNT' to find the total number of records that got affected/fetched in the cursor.
+    Code line 15: After exiting from the loop the cursor is closed and the memory allocated is set free.
+
+FOR Loop Cursor statement
+==========================
+
+"FOR LOOP" statement can be used for working with cursors. We can give the cursor name instead of range limit in the FOR loop statement so that the loop will work from the first record of the cursor to the last record of the cursor. The cursor variable, opening of cursor, fetching and closing of the cursor will be done implicitly by the FOR loop.
+
+Syntax: 
+
+DECLARE
+  CURSOR <cursor_name> IS <SELECT statement>;
+BEGIN
+  FOR I IN <cursor_name>
+  LOOP
+  .
+  .
+  END LOOP;
+END;
+
+    In the above syntax, the declaration part contains the declaration of the cursor.
+    The cursor is created for the 'SELECT' statement that is given in the cursor declaration.
+    In execution part, the declared cursor is setup in the FOR loop and the loop variable 'I' will behave as cursor variable in this case.
+
+Example 1: In this example, we will project all the employee name from emp table using a cursor-FOR loop. 
+
+DECLARE
+  CURSOR cur_emp IS SELECT empno,ename,job FROM emp; 
+  --v_emp  cur_emp%ROWTYPE;
+BEGIN
+  FOR v_emp IN cur_emp
+  LOOP
+    DBMS_OUTPUT.PUT_LINE(v_emp.empno||' '||v_emp.ename||' '||v_emp.job);
+  END LOOP;
+END;
+
+Code Explanation:
+
+    Code line 2: Declaring the cursor cur_emp for statement 'SELECT emp_name FROM emp'.
+    Code line 4: Constructing the 'FOR' loop for the cursor with the loop variable v_emp.
+    Code line 5: Printing the employee name in each iteration of the loop.
+    Code line 8: Exit the loop 
+
+Note: In Cursor-FOR loop, cursor attributes cannot be used since opening, fetching and closing of the cursor is done implicitly by FOR loop. 
+==========================================
+
+Introduction to PL/SQL cursor FOR LOOP statement
+
+The cursor FOR LOOP statement is an elegant extension of the numeric FOR LOOP statement.
+
+The numeric FOR LOOP executes the body of a loop once for every integer value in a specified range.  Similarly, the cursor FOR LOOP executes the body of the loop once for each row returned by the query associated with the cursor.
+
+A nice feature of the cursor FOR LOOP statement is that it allows you to fetch every row from a cursor without manually managing the execution cycle i.e.,  OPEN, FETCH, and CLOSE.
+
+The cursor FOR LOOP implicitly creates its loop index as a record variable with the row type in which the cursor returns and then opens the cursor.
+
+In each loop iteration, the cursor FOR LOOP statement fetches a row from the result set into its loop index. If there is no row to fetch, the cursor FOR LOOP closes the cursor.
+
+The cursor is also closed if a statement inside the loop transfers control outside the loop, e.g., EXIT and GOTO, or raises an exception.
+
+The following illustrates the syntax of the cursor FOR LOOP statement:
+	
+FOR record IN cursor_name
+LOOP
+    process_record_statements;
+END LOOP;
+
+record emp_cursor%ROWTYPE
+
+1) record
+
+The record is the name of the index that the cursor FOR LOOP statement declares implicitly as a %ROWTYPE record variable of the type of the cursor.
+
+The record variable is local to the cursor FOR LOOP statement. It means that you can only reference it inside the loop, not outside. After the cursor FOR LOOP statement execution ends, the record variable becomes undefined.
+
+2) cursor_name
+
+The cursor_name is the name of an explicit cursor that is not opened when the loop starts.
+
+Note that besides the cursor name, you can use a SELECT statement as shown below:
+	
+FOR record IN (select_statement)
+LOOP
+    process_record_statements;
+END LOOP; 
+
+In this case, the cursor FOR LOOP declares, opens, fetches from, and closes an implicit cursor. However, the implicit cursor is internal; therefore, you cannot reference it.
+
+Note that Oracle Database automatically optimizes a cursor FOR LOOP to work similarly to a BULK COLLECT query. Although your code looks as if it fetched one row at a time, Oracle Database fetches multiple rows at a time and allows you to process each row individually.
+PL/SQL cursor FOR LOOP examples
+
+Let’s look at some examples of using the cursor FOR LOOP statement to see how it works.
+A) PL/SQL cursor FOR LOOP example
+
+The following example declares an explicit cursor and uses it in the cursor FOR LOOP statement.
+DECLARE
+  CURSOR c_product
+  IS
+    SELECT 
+        product_name, list_price
+    FROM 
+        products 
+    ORDER BY 
+        list_price DESC;
+BEGIN
+  FOR r_product IN c_product
+  LOOP
+    dbms_output.put_line( r_product.product_name || ': $' ||  r_product.list_price );
+  END LOOP;
+END;
+
+In this example, the SELECT statement of the cursor retrieves data from the products table. The FOR LOOP statement opened, fetched each row in the result set, displayed the product information, and closed the cursor.
+B) Cursor FOR LOOP with a SELECT statement example
+
+The following example is equivalent to the example above but uses a query in a cursor FOR LOOP statement.
+BEGIN
+  FOR r_product IN (
+        SELECT 
+            product_name, list_price 
+        FROM 
+            products
+        ORDER BY list_price DESC
+    )
+  LOOP
+     dbms_output.put_line( r_product.product_name ||
+        ': $' || 
+        r_product.list_price );
+  END LOOP;
+END; 	
+=======================================
+An explicit cursor may accept a list of parameters. Each time you open the cursor, you can pass different arguments to the cursor, which results in different result sets.
+
+Syntax of a declaring a cursor with parameters:
+-----------------------------------------------	
+CURSOR cursor_name (parameter_list) 
+IS
+cursor_query;
+
+In the cursor query, each parameter in the parameter list can be used anywhere constant is used. The cursor parameters cannot be referenced outside of the cursor query.
+
+To open a cursor with parameters, you use the following syntax:
+---------------------------------------------------------------	
+OPEN cursor_name (value_list);
+
+In this syntax, you passed arguments corresponding to the parameters of the cursor.
+
+Cursors with parameters are also known as parameterized cursors.
+PL/SQL cursor with parameters example
+
+The following example illustrates how to use a cursor with parameters:
+
+Parameterized Cursor
+=====================
+DECLARE
+  CURSOR emp_cursor(p_deptno NUMBER) IS (SELECT   EmpNo,EName,Job,DeptNo   FROM Emp WHERE DeptNo=p_deptno);
+  v_emp_record emp_cursor%ROWTYPE;
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('Employee belong to dept 10');
+  OPEN emp_cursor(10);
+  LOOP
+     FETCH emp_cursor INTO v_emp_record;
+     IF emp_cursor%NOTFOUND THEN
+        EXIT;
+     END IF;
+     DBMS_OUTPUT.PUT_LINE(v_emp_record.Empno||' '||     v_emp_record.Ename||' '||v_emp_record.Job||' '||     v_emp_record.DeptNo);
+  END LOOP;
+  CLOSE emp_cursor;
+
+  DBMS_OUTPUT.PUT_LINE('Employee belong to dept 20');
+  OPEN emp_cursor(20);
+  LOOP
+     FETCH emp_cursor INTO v_emp_record;
+     IF emp_cursor%NOTFOUND THEN
+        EXIT;
+     END IF;
+     DBMS_OUTPUT.PUT_LINE(v_emp_record.Empno||' '||v_emp_record.Ename||' '||v_emp_record.Job||' '||v_emp_record.DeptNo);
+  END LOOP;
+  CLOSE emp_cursor;
+END;
+/
+=====================	
+DECLARE
+    r_product products%rowtype;
+    CURSOR c_product (low_price NUMBER, high_price NUMBER)
+    IS
+        SELECT *
+        FROM products
+        WHERE list_price BETWEEN low_price AND high_price;
+BEGIN
+    -- show mass products
+    dbms_output.put_line('Mass products: ');
+    OPEN c_product(50,100);
+    LOOP
+        FETCH c_product INTO r_product;
+        EXIT WHEN c_product%notfound;
+        dbms_output.put_line(r_product.product_name || ': ' ||r_product.list_price);
+    END LOOP;
+    CLOSE c_product;
+ 
+    -- show luxury products
+    dbms_output.put_line('Luxury products: ');
+    OPEN c_product(800,1000);
+    LOOP
+        FETCH c_product INTO r_product;
+        EXIT WHEN c_product%notfound;
+        dbms_output.put_line(r_product.product_name || ': ' ||r_product.list_price);
+    END LOOP;
+    CLOSE c_product;
+ 
+END;
+/
+
+In this example:
+
+    First, declare a cursor that accepts two parameters low price and high price. The cursor retrieves products whose prices are between the low and high prices.
+    Second, open the cursor and pass the low and high prices as 50 and 100 respectively. Then fetch each row in the cursor and show the product’s information, and close the cursor.
+    Third, open the cursor for the second time but with different arguments, 800 for the low price and 100 for the high price. Then the rest is fetching data, printing out product’s information, and closing the cursor.
+
+PL/SQL parameterized cursor with default values
+===============================================
+
+A parameterized cursor can have default values for its parameters as shown below:
+
+	
+CURSOR cursor_name 
+(
+    parameter_name1 datatype := default_value, 
+    parameter_name2 datatype := default_value, 
+    ...
+) 
+IS 
+cursor_query;
+
+If you open the parameterized cursor without passing any argument, the cursor will use the default values for its parameters.
+
+The following example shows how to use a parameterized cursor with default values.
+
+DECLARE
+    CURSOR c_revenue (in_year NUMBER :=2017 , in_customer_id NUMBER := 1)
+    IS
+        SELECT SUM(quantity * unit_price) revenue
+        FROM order_items
+        INNER JOIN orders USING (order_id)
+        WHERE status = 'Shipped' AND EXTRACT( YEAR FROM order_date) = in_year
+        GROUP BY customer_id
+        HAVING customer_id = in_customer_id;
+        
+    r_revenue c_revenue%rowtype;
+BEGIN
+    OPEN c_revenue;
+    LOOP
+        FETCH c_revenue INTO r_revenue;
+        EXIT    WHEN c_revenue%notfound;
+        -- show the revenue
+        dbms_output.put_line(r_revenue.revenue);
+    END LOOP;
+    CLOSE c_revenue;
+END;
+
+In this example, we declared a parameterized cursor with default values. When we opened the cursor, we did not pass any arguments; therefore, the cursor used the default values, 2017 for  in_year and 1 for in_customer_id
+
+===========================================
+Introduction to Oracle Cursor FOR UPDATE
+========================================
+Sometimes, you want to lock a set of rows before you can update them in your program. Oracle provides the FOR UPDATE clause of the SELECT statement in an updatable cursor to perform this kind of locking mechanism.
+
+Here is the syntax for declaring an updatable cursor:
+
+	
+CURSOR cursor_name IS
+    SELECT select_clause
+    FROM from_clause
+    WHERE where_clause
+    FOR UPDATE OF ColumnName;
+
+The new syntax here is the FOR UPDATE keywords.
+
+Once you open the cursor, Oracle will lock all rows selected by the SELECT ... FOR UPDATE statement in the tables specified in the FROM clause. And these rows will remain locked until the cursor is closed or the transaction is completed with either COMMIT or ROLLBACK.
+
+Note that Oracle locks all rows returned by the SELECT ... FOR UPDATE during the update, therefore, you should have a WHERE clause to select only necessary rows to be locked.
+
+If you have a specific column that you want to update, you can list it in the FOR UPDATE clause as follows:
+
+	
+CURSOR cursor_name 
+       IS
+       SELECT select_clause
+       FROM from_clause
+       WHERE where_clause
+       FOR UPDATE OF column_name;
+
+In this case, Oracle only locks rows of the table that has the column name listed in the FOR UPDATE OF clause.
+
+Note that if you use only FOR UPDATE clause and do not include one or more column after the OF keyword, Oracle will then lock all selected rows across all tables listed in the FROM clause.
+
+Oracle Cursor FOR UPDATE example
+
+Consider the following example.
+	
+DECLARE
+    -- customer cursor
+    CURSOR c_customers IS 
+        SELECT customer_id,name,credit_limit FROM customers WHERE credit_limit > 0 
+        FOR UPDATE OF credit_limit;
+    -- local variables
+    l_order_count NUMBER := 0;
+    l_increment   NUMBER := 0;
+    
+BEGIN
+    FOR r_customer IN c_customers
+    LOOP
+        -- get the number of orders of the customer
+        SELECT COUNT(*) INTO l_order_count FROM orders
+        WHERE customer_id = r_customer.customer_id;
+        -- 
+        IF l_order_count >= 5 THEN
+            l_increment := 5;
+        ELSIF l_order_count < 5 AND l_order_count >=2 THEN
+            l_increment := 2;
+        ELSIF l_order_count = 1 THEN
+            l_increment := 1;
+        ELSE 
+            l_increment := 0;
+        END IF;
+        
+        IF l_increment > 0 THEN
+            -- update the credit limit
+            UPDATE 
+                customers
+            SET 
+                credit_limit = credit_limit * ( 1 +  l_increment/ 100)
+            WHERE 
+                customer_id = r_customer.customer_id;
+            
+            -- show the customers whose credits are increased
+            dbms_output.put_line('Increase credit for customer ' 
+                || r_customer.NAME || ' by ' 
+                || l_increment || '%' );
+        END IF;
+    END LOOP;
+    
+    EXCEPTION
+        WHEN OTHERS THEN
+            dbms_output.put_line('Error code:' || SQLCODE);
+            dbms_output.put_line('Error message:' || sqlerrm);
+            RAISE;
+            
+END;
+/
+
+How it works.
+
+    First, declare an updatable cursor that updates credits of the customers whose credits are greater than zero.
+    Next, loop over the rows in the cursors.
+    Then, get the number of orders for each customer.
+    After that, assign the credit increment based on the order count.
+    Finally, update the credit of the customer.
+
+
+DECLARE
+        CURSOR emp_cursor IS
+        SELECT EmpNo,Ename,Job,Sal FROM Emp FOR UPDATE OF Sal;
+        v_emp_record emp_cursor%ROWTYPE;
+ BEGIN
+        OPEN emp_cursor;
+          LOOP
+            FETCH emp_cursor INTO v_emp_record;
+            IF emp_cursor%NOTFOUND THEN
+             EXIT;
+            END IF;
+            IF v_emp_record.Sal > 1000 THEN
+             UPDATE Emp SET Sal=Sal*1.1 WHERE CURRENT OF emp_cursor;
+	     --UPDATE Emp SET Sal=Sal*1.1 WHERE EmpNo=v_emp_record.EmpNo;	   
+	     DBMS_OUTPUT.PUT_LINE('Salary updated for : '||v_emp_record.EmpNo);
+            END IF;
+          END LOOP;
+          COMMIT;
+        CLOSE emp_cursor;
+  END;
+/
+
+FOR UPDATE : This will lock all the table by which the cursor is created.
+
+FOR UPDATE OF <ColName> : This will lock only the tables which contains the given column name.
+
+Without FOR UPDATE: It won't lock any of the table.
+
+CURSOR empdeptCursor IS
+SELECT e.EmpNo,e.Ename,e.Job,e.Sal,d.DeptNo,d.DName,d.Loc FROM emp e, Dept d WHERE 
+e.DeptNo = d.DeptNo;
+
+CURSOR empdeptCursor IS
+SELECT e.EmpNo,e.Ename,e.Job,e.Sal,d.DeptNo,d.DName,d.Loc FROM emp e, Dept d WHERE 
+e.DeptNo = d.DeptNo FOR UPDATE;
+
+CURSOR empdeptCursor IS
+SELECT e.EmpNo,e.Ename,e.Job,e.Sal,d.DeptNo,d.DName,d.Loc FROM emp e, Dept d WHERE 
+e.DeptNo = d.DeptNo FOR UPDATE OF Sal;
+
+CURSOR empdeptCursor IS
+SELECT e.EmpNo,e.Ename,e.Job,e.Sal,d.DeptNo,d.DName,d.Loc FROM emp e, Dept d WHERE 
+e.DeptNo = d.DeptNo AND e.DeptNo=20 FOR UPDATE OF Sal;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

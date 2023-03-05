@@ -1,0 +1,101 @@
+ADD_MONTHS	
+ADD_MONTHS( DATE '2016-02-29', 1 )	 
+31-MAR-16	
+Add a number of months (n) to a date and return the same day which is n of months away.
+
+CURRENT_DATE	
+SELECT CURRENT_DATE FROM dual
+06-AUG-2017 
+
+Return the current date and time in the session time zone
+
+CURRENT_TIMESTAMP
+SELECT CURRENT_TIMESTAMP FROM dual
+06-AUG-17 08.26.52.742000000 PM -07:00	
+Return the current date and time with time zone in the session time zone
+
+DBTIMEZONE
+SELECT DBTIMEZONE FROM dual;
+-07:00	
+Get the current database time zone
+
+EXTRACT	
+SELECT EXTRACT(YEAR FROM SYSDATE) FROM DUAL;
+2017
+Extract a value of a date time field e.g., YEAR, MONTH, DAY, … from a date time value.
+
+FROM_TZ	
+SELECT FROM_TZ(TIMESTAMP '2017-08-08 08:09:10', '-09:00') FROM DUAL;
+	
+08-AUG-17 08.09.10.000000000 AM -07:00	
+
+Convert a timestamp and a time zone to a TIMESTAMP WITH TIME ZONE value
+
+LAST_DAY
+SELECT LAST_DAY(SYSDATE) FROM DUAL;
+29-FEB-16
+Gets the last day of the month of a specified date.
+
+LOCALTIMESTAMP
+SELECT LOCALTIMESTAMP FROM dual	 
+06-AUG-17 08.26.52.742000000 PM	
+Return a TIMESTAMP value that represents the current date and time in the session time zone.
+
+MONTHS_BETWEEN	
+SELECT MONTHS_BETWEEN( DATE '2017-01-07', DATE '2017-01-01' )	
+FROM DUAL;
+6	
+Return the number of months between two dates.
+
+NEW_TIME	
+NEW_TIME( TO_DATE( '08-07-2017 01:30:45', 'MM-DD-YYYY HH24:MI:SS' ), 'AST', 'PST' )	 
+06-AUG-2017 21:30:45	
+Convert a date in one time zone to another
+
+NEXT_DAY	
+SELECT NEXT_DAY( SYSDATE, 'THURSDAY' )	 FROM DUAL
+02-JAN-00	
+Get the first weekday that is later than a specified date.
+
+ROUND	
+SELECT ROUND(DATE '2017-07-16', 'MM') FROM DUAL;	 
+01-AUG-17	
+Return a date rounded to a specific unit of measure.
+
+SESSIONTIMEZONE	 
+SELECT SESSIONTIMEZONE FROM dual; 	 
+-07:00	
+Get the session time zone
+
+SYSDATE	 
+SYSDATE	  
+01-AUG-17	
+Return the current system date of the operating system where the Oracle Database resides.
+
+SYSTIMESTAMP	 
+SELECT SYSTIMESTAMP FROM dual;	
+01-AUG-17 01.33.57.929000000 PM -07:00	
+Return the system date and time that includes fractional seconds and time zone.
+
+TO_CHAR	 
+SELECT TO_CHAR( DATE'2017-01-01', 'DL') FROM DUAL	 
+Sunday, January 01, 2017
+	
+SELECT TO_CHAR(DATE'2017-01-01', 'DD-MON-YYYY HH24:MI:SSxFF TZH:TZM;) FROM DUAL
+Convert a DATE or an INTERVAL value to a character string in a specified format.
+
+TO_DATE	
+SELECT TO_DATE( '01 Jan 2017', 'DD MON YYYY' )	FROM DUAL; 
+01-JAN-17	
+Convert a date which is in the character string to a DATE value.
+
+TRUNC	 
+SELECT TRUNC(DATE '2017-07-16', 'MM') FROM DUAL;
+01-JUL-17	
+Return a date truncated to a specific unit of measure.
+
+TZ_OFFSET	
+SELECT TZ_OFFSET( 'Europe/London') FROM DUAL;
++01:00	
+Get time zone offset of a time zone name from UTC
+

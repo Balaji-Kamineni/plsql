@@ -1,0 +1,70 @@
+SELECT	AND    FROM
+-----------------------------------
+
+It is a building block for data retrieval in SQL.
+
+Syntax : SELECT <COLUMNS> FROM <TABLE>;
+
+Eg:    SQL>select * from EMP;
+
+ANALYSIS:
+Notice that columns 6 and 8 in the output statement are right justified and that columns 2 and 3 are left justified. This format follows the alignment convention in which numeric data types are right justified and character data types are left justified. 
+
+The asterisk (*) in select * tells the database to return all the columns associated with the given table described in the FROM clause. The database determines the order in which to return the columns.
+
+Terminating an SQL Statement
+--------------------------------------------
+
+In some implementations of SQL, the semicolon at the end of the statement tells the
+interpreter that you are finished writing the query. For example, Oracle's SQL*PLUS
+won't execute the query until it finds a semicolon (or a slash). On the other hand, some
+implementations of SQL do not use the semicolon as a terminator. For example, Microsoft Query and Borland's ISQL don't require a terminator, because your query is typed in an edit box and executed when you push a button.
+
+Changing the Order of the Columns
+
+We can change the order of selection of columns
+
+SQL> SELECT empno, ename, sal, job, comm from EMP;
+
+Expressions, Conditions, and Operators
+---------------------------------------------------------
+
+Expressions
+
+An expression returns a value. Expression types are very broad, covering different data types such as String, Numeric, and Boolean. 
+SQL>SELECT sal FROM EMP;
+
+In the following statement NAME, DESIGNATION, SAL are expressions:
+
+SQL>SELECT ENAME, DESIGNATION, SAL FROM EMP;
+
+Now, examine the following expression: 
+
+WHERE ENAME = 'KING'
+
+It contains a condition, ENAME = 'KING', which is an example of a Boolean expression. ENAME = 'KING' will be either TRUE or FALSE, depending on the condition =.
+
+Conditions
+
+If you ever want to find a particular item or group of items in your database, you need one or more conditions. Conditions are contained in the WHERE clause. In the preceding example, the condition is ENAME = 'KING'
+To find everyone in your organization who worked more than 100 hours last month, your condition would be 
+SAL > 2000
+Conditions enable you to make selective queries. In there most common form, conditions comprise a variable, a constant, and a comparison operator. In the first example the variable is ENAME, the constant is 'KING', and the comparison operator is =. 
+
+In the second example the variable is SAL, the constant is 100, and the comparison operator is >. You need to know about two more elements before you can write conditional queries: the WHERE clause and operators.
+
+The WHERE Clause
+------------------------------
+The syntax of the WHERE clause is
+
+SYNTAX:
+SELECT <COLUMNS> FROM <TABLE> WHERE <SEARCH CONDITION>;
+
+SELECT, FROM, and WHERE are the three most frequently used clauses in SQL. WHERE simply causes your queries to be more selective. Without the WHERE clause, the most useful thing you could do with a query is display all records in the selected table(s).
+
+If you wanted a particular EMPLOYEE, you could type
+
+SQL> SELECT * FROM EMP WHERE ENAME = 'KING';
+
+ANALYSIS:
+This simple example shows how you can place a condition on the data that you want to retrieve.

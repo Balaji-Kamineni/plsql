@@ -1,0 +1,196 @@
+Operators
+---------------
+Operators are the elements you use inside an expression to articulate how you want specified conditions to retrieve data. Operators fall into six groups: arithmetic, comparison, character, logical, set, and miscellaneous.
+
+Arithmetic Operators
+-----------------------------
+The arithmetic operators are plus (+), minus (-), divide (/), multiply (*).
+The first four are self-explanatory. Modulo returns the integer remainder of a division.
+
+Comparison Operators
+--------------------------------
+True to their name, comparison operators compare expressions and return one of three values: TRUE, FALSE, or Unknown. 
+
+SQL>SELECT * FROM EMP WHERE SAL >= 2000;
+
+SQL>SELECT * FROM EMP WHERE SAL >= 3000 AND SAL <= 4000;
+
+SQL>SELECT * FROM EMP WHERE SAL BETWEEN 3000 AND 4000;
+
+SQL>SELECT * FROM EMP WHERE SAL NOT BETWEEN 3000 AND 4000;
+
+To understand how you could get an Unknown, you need to know a little about the concept of NULL. In database terms NULL is the absence of data in a field. It does not mean a column has a zero or a blank in it. A zero or a blank is a value. NULL means nothing is in that field. If you make a comparison like Field = 9 and the only value for Field is NULL, the comparison will come back Unknown. Because Unknown is an uncomfortable condition, most flavors of SQL change Unknown to FALSE and provide a special operator, IS NULL, to test for a NULL condition.
+
+Here's an example of NULL: Suppose an entry in the PRICE table does not contain a value for WHOLESALE. The results of a query might look like this:
+
+SQL>SELECT * FROM EMP WHERE COMM IS NULL;
+
+SQL>SELECT * FROM EMP WHERE COMM IS NOT NULL;
+
+Character Operators
+
+You can use character operators to manipulate the way character strings are represented, both in the output of data and in the process of placing conditions on data to be retrieved. This section describes two character operators: the LIKE operator and the || operator, which conveys the concept of character concatenation.
+
+ LIKE operator
+What if you wanted to select parts of a database that fit a pattern but weren't quite exact matches? You could use the equal sign and run through all the possible cases, but that process would be time-consuming. Instead, you could use LIKE. 
+
+Consider the following:
+SQL>SELECT * FROM EMP WHERE ENAME LIKE ‘A%’;
+
+ANALYSIS
+
+Displays all the employees whose names begins with letter A
+
+SQL>SELECT * FROM EMP WHERE ENAME NOT LIKE ‘A%’;
+
+ANALYSIS
+
+Displays all the employees whose names not beginning with letter A
+
+SQL>SELECT * FROM EMP WHERE ENAME  LIKE ‘%A%’;
+
+ANALYSIS
+
+Displays all the employees whose names contains letter A (Any number of A’s)
+
+SQL>SELECT * FROM EMP WHERE ENAME  LIKE ‘%A%A%’;
+
+ANALYSIS
+Displays all the names whose name contains letter A more than one time
+
+SQL>SELECT * FROM EMP WHERE HIREDATE LIKE ‘%DEC%’;
+
+ANALYSIS
+
+Displays all the employees who joined in the month of December.
+
+SQL> SELECT * FROM EMP WHERE HIREDATE LIKE ‘%81’;
+
+ANALYSIS
+
+Displays all the employees who joined in the year 81.
+
+Underscore (_)
+
+The underscore is the single-character wildcard.
+SQL> SELECT EMPNO,ENAME FROM EMP WHERE ENAME LIKE ‘_A%’;
+
+ANALYSIS
+Displays all the employees whose second letter is A
+
+SQL> SELECT * FROM EMP WHERE ENAME LIKE ‘A%\_%’ ESCAPE ‘\’;
+OUTPUT:
+
+ENAME                                                                                    ----------                                                                                     AVINASH_K
+ANAND_VARDAN                                                                    ADAMS_P                                                                                
+ANALYSIS
+Displays all the employees with underscore (_). ‘\’ Escape character
+Underscore is used to identify a position in the string. To treat _ as a character we have to use Escape (\) character,
+
+Concatenation ( ||) operator
+
+Used to combine two given strings
+
+SELECT ENAME || JOB FROM EMP;
+
+ANALYSIS
+Combines both name and designation as a single string.
+
+SQL>SELECT ENAME || ‘ ,  ‘ || JOB FROM EMP;
+ANALYSIS
+Combines both name and designation as a single string separated by ,(comma).
+
+Logical operators
+
+SELECT ENAME FROM EMP WHERE ENAME  LIKE ‘%A%’ and ENAME NOT LIKE ‘%A%A%’
+
+ANALYSIS
+Displays all the employees whose names contains letter A exactly one time.
+
+SELECT * FROM EMP WHERE SAL >= 3000 AND SAL <= 4000;
+
+SELECT * FROM EMP WHERE SAL BETWEEN 3000 AND 4000;
+
+SELECT * FROM EMP WHERE SAL NOT BETWEEN 3000 AND 4000;
+
+Miscellaneous Operators: IN, BETWEEN and DISTINCT
+
+The two operators IN and BETWEEN provide shorthand for functions you already know how to do. You could type the following:
+SQL> SELECT ENAME, JOB FROM EMP WHERE JOB= 'CLERK'
+ OR JOB =‘MANAGER’ OR JOB = 'SALESMAN';
+ANALYSIS
+Display employees with designations manager, clerk, and salesman.
+
+The above statement takes more time to parse it, which reduces the efficiency.
+SQL> SELECT * FROM EMP WHERE JOB IN('CLERK','SALESMAN','MANAGER');
+
+ANALYSIS
+Display employees with designations manager, clerk, and salesman.
+SQL> SELECT ENAME,JOB FROM EMP
+ WHERE JOB NOT IN('CLERK','SALESMAN','MANAGER');
+
+ANALYSIS
+Display designations other than manager, clerk, and salesman
+SQL> SELECT ENAME,HIREDATE
+ FROM EMP
+ WHERE HIREDATE IN (’01-MAY-1981’,’09-DEC-1982’); 
+
+ANALYSIS
+Display employees who joined on two different dates.
+
+DISTINCT OPERATOR
+
+SQL>	SELECT DISTINCT JOB FROM EMP;
+
+ANALYSIS
+Distinct operator displays unique designations.
+Distinct operator by default displays the information in ascending order.
+
+ORDER BY CLAUSE
+
+Display the information in a particular order (Ascending or descending order)
+
+Syntax
+
+SELECT <COLUMNS> FROM <TABLE> WHERE <CONDITION> ORDER BY <COLUMN(S)>;
+SQL> SELECT ENAME FROM EMP ORDER BY ENAME;
+
+ANALYSIS
+Displays employees in ascending order of names.
+
+SQL> SELECT JOB,ENAME,SAL FROM EMP ORDER BY JOB,ENAME;
+
+ANALYSIS
+Display employees in ascending order of jobs. With each job it places the information in ascending order of names.
+
+SQL> SELECT * FROM EMP ORDER BY job, name desc;
+
+OUTPUT:
+Display employees in ascending order by jobs. With each job it places the information in descending order of names.
+
+SQL> SELECT *
+   FROM EMP where JOB != ‘CLERK’
+ ORDER BY JOB;
+
+OUTPUT:
+Display employees in ascending order of jobs other than clerks.
+
+ANALYSIS
+
+When we are executing the query, it is divided into two different parts.
+
+1) SELECT *
+   FROM EMP where JOB != ‘CLERK’
+   ORDER BY JOB;
+
+First part is going to execute first, and selects all the employees whose designation is other than clerk and places them in a temporary table.
+
+On the temporary table, order by clause is applied, places the information in ascending order by jobs in the shadow page, from where end user can able to see the output.
+
+We can also use order by clause as
+
+SQL> SELECT * FROM EMP ORDER BY 3;
+
+ANALYSIS
+
+It places the information in the order of third column in the table.

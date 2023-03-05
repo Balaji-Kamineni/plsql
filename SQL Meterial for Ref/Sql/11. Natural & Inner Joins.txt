@@ -1,0 +1,109 @@
+NATURAL AND INNER JOINS (Introduced in 9i)
+
+We can use natural keyword to indicate that a join should be performed based on all columns that have the same name in the two tables being joined.
+
+
+Creating Natural Joins
+
+
+•	The Natural join clause is based on all columns in the two tables that have the same name,
+•	It selects rows from the two tables that have equal values in all matched columns.
+•	If the columns having the same names have different data types, an error is returned.
+
+ 
+
+For example, To get the common information from two tables,
+
+INPUT
+
+SQL> SELECT EMPNO,ENAME,JOB,DEPTNO,DNAME FROM DEPT
+   NATURAL JOIN EMP;
+
+Creating Joins with Using Caluse
+
+If several columns have the same names but the data types do not match, the NATURAL JOIN clause can be modified with USING clause to specify the columns that should be used for an equijoin.
+
+use the USING clause to match only one column when more than one column matches.
+
+Do not use a tablename or alias in the referenced columns
+
+The NATURAL JOIN and USING clauses are mutually exclusive.
+
+INNER JOIN
+
+Support for INNER join syntax was introduced in Oracle9i, inner joins are the default – they return the rows the two tables have in common, and are the alternative to outer joins. Note that they support ON clause, so that you can specify join criteria.
+
+SQL>SELECT EMPNO, ENAME, JOB, DEPT.DEPTNO, DNAME FROM EMP
+INNER JOIN DEPT ON EMP.DEPTNO = DEPT.DEPTNO;
+
+OTHER OBJECTS
+
+SEQUENCE OBJECT
+
+Used to generate sequence(Unique) Integers for use of primary keys.
+
+SYNTAX
+
+CREATE SEQUENCE sequence
+[INCREMENT BY n]
+[START WITH n]
+[{MAXVALUE n | NOMAXVALUE}]
+[{MINVALUE n | NOMINVALUE}]
+[{CYCLE | NOCYCLE}]
+[{CACHE n | NOCACHE}];
+
+Sequence is the name of the sequence generator
+
+INCREMENT BY n specifies the interval between sequence numbers where n is an integer (If this clause is omitted, the sequence increments by 1.)
+
+START WITH n   specifies the first sequence number to be generated (If this clause is omitted, the sequence starts with 1.)
+
+MAXVALUE n     specifies the maximum value the sequence can generate
+
+NOMAXVALUE     specifies a maximum value of 10^27 for an ascending sequence and –1 for a descending sequence (This is the default option.)
+
+MINVALUE n     specifies the minimum sequence value
+NOMINVALUE     specifies a minimum value of 1 for an ascending sequence and –(10^26) for a descending sequence (This is the default option.)
+
+CYCLE | NOCYCLE specifies whether the sequence continues to generate values after  reaching its maximum or minimum value (NOCYCLE is the default Option.)
+
+CACHE n | NOCACHE specifies how many values the Oracle server preallocates and keep in memory (By default, the Oracle server caches 20 values.)   The value set must be less than MAXVALUE minus
+
+CREATE SEQUENCE SQNO47473
+    START WITH 1
+    INCREMENT BY 1
+    MAXVALUE 10;
+
+CREATE SEQUENCE SQNO47473
+    START WITH 1
+    INCREMENT BY 1
+    MAXVALUE 10
+    CACHE 3
+   CYCLE;
+
+Note: - These sequences are stored in a data dictionary table USER_SEQUENCES.
+This sequence object provides two public member functions
+
+NEXTVAL   and CURRVAL
+
+NEXTVAL is a function which generate next value from sequence object
+CURRVAL is a function, which gives the current value of the sequence object
+
+SQL> create table sample47473(empno number(4),ename varchar2(15), sal number(5));
+
+To insert the values into the table
+
+SQL> INSERT INTO SAMPLE47473 VALUES(SQNO47473.NEXTVAL,
+           '&ENAME’, &SAL);
+
+TO MODIFY THE SEQUNECE OBJECT
+
+SQL> ALTER SEQUENCE SQNO47473
+         INCREMENT BY 2
+        MAXVALUE 40;
+
+Note : We can’t change starting value
+
+To remove the sequence object
+
+SQL>  DROP SEQUENCE <SEQUENCE_NAME>;

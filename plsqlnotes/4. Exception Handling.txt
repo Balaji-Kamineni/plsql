@@ -1,0 +1,83 @@
+
+DECLARE [Optional]
+  --Declaration of variables
+  --Declaration of exception
+  --Declaration of cursors
+
+BEGIN [Mandatory]
+  --Execution block
+
+  EXCEPTION [Optional]
+    --Exception code
+    WHEN Exception1 THEN Statement1;
+    WHEN Exception2 THEN Statement2;
+    WHEN Others THEN Statementn;
+END;[Mandatory]
+
+Exception Handling in PL/SQL :
+-------------------------------------------
+A PL/SQL block may contain statements that specify exception handling routines. Each error or warning during the execution of a PL/SQL block raises an exception. One can distinguish between two types of exceptions:
+• system defined exceptions
+• user defined exceptions (which must be declared by the user in the declaration part of a block where the exception is used/implemented).
+
+System defined exceptions are always automatically raised whenever corresponding errors or warnings occur. User defined exceptions, in contrast, must be raised explicitly in a sequence of statements using raise <exception name>. After the keyword exception at the end of a block, user defined exception handling routines are implemented. An implementation has the pattern
+
+when <exception name> then <sequence of statements>;
+
+The most common errors that can occur during the execution of PL/SQL programs are handled by system defined exceptions. Some of the predefined exceptions are: 
+
+1) Pre defined exceptions
+-----------------------------------
+i) NO_DATA_FOUND
+This exception is raised when select statement returns no rows
+ii) CURSOR_ALREADY_OPEN
+This exception is raised when we try to open a cursor which is already opened
+iii) DUP_VAL_ON_INDEX
+Raised when we insert duplicate values in a column defined as unique index
+iv) STORAGE_ERROR
+Raised when PL/SQL runs out of memory or if memory is corrupted
+v) ZERO_DIVIDE
+Raised when we try to divide a number by zero
+vi) LOGIN_DENIED
+when we try to enter oracle using invalid username and password
+vii) INVALID_NUMBER
+when string is passed instead of number.
+viii) VALUE_ERROR
+when we enter a value out of range
+
+
+Examples:
+
+Eg:1:
+******
+declare
+eno number(4);
+ename varchar2(10);
+BEGIN
+SELECT empno,ename INTO eno, ename FROM emp
+WHERE empno = 7900; --RAISE NO_DATA_FOUND;
+DBMS_OUTPUT.PUT_LINE ('emp name: '||eno||' '||
+ename);
+EXCEPTION
+WHEN NO_DATA_FOUND THEN
+DBMS_OUTPUT.PUT_LINE ('There is no emp with '||
+'7900');
+WHEN OTHERS THEN
+  --
+END;
+
+
+Eg:2
+****
+DECLARE
+v_eid NUMBER := &v_eid;
+v_ename VARCHAR2(10);
+v_sal number(5);
+BEGIN
+SELECT ename,sal INTO v_ename, v_sal FROM emp
+WHERE eid = v_eid;
+DBMS_OUTPUT.PUT_LINE ('emp name: '||v_ename||' '|| v_sal);
+EXCEPTION
+WHEN NO_DATA_FOUND THEN
+DBMS_OUTPUT.PUT_LINE ('There is no such employee');
+END;

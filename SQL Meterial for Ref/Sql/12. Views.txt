@@ -1,0 +1,69 @@
+VIEWS
+=====
+-> A view is an object, which is a logical representation of a table.
+
+-> A view contains no data on its own
+
+-> It is derived from tables
+
+-> Changes made in tables are automatically reflected in views
+
+-> As a view does not store any data the redundancy problem does not arise.
+
+-> Critical data in the base table is safeguarded as access to such data can be controlled.
+
+-> It is used to reduce the complexity of the query
+
+In Oracle we can create different types of views
+
+1) SIMPLE                                              
+2) COMPLEX                                
+3) INLINE
+
+SIMPLE view is a view, which is created using only one base table.
+
+COMPLEX view is a view, which is created using more than one table or using group functions.
+
+INLINE view is a view, which is created using sub query (it is not a schema object.) 
+
+• It is a named sub query in the FROM clause of the main query. Generally used in TOP N Analysis.
+
+SYNTAX
+CREATE OR REPLACE [FORCE]  VIEW <VIEWNAME> AS SELECT <COLUMNS> FROM <TABLE > [WITH READ ONLY] [WITH CHECK OPTION];
+
+The table on which a view is based is called as base table
+FORCE option allows view to be created even if the base table doesn’t exist. However, the base table should exist before the view is used.
+
+Changing Base Table through view
+--------------------------------
+A view can also be used to change the data of base table
+A view can be used to delete, insert and update rows in the base table.
+
+Example  
+SQL> CREATE OR REPLACE VIEW TESTVIEW47473 AS SELECT EMPNO,ENAME,SAL FROM EMP47473;
+Note: - These views are stored in a data dictionary table USER_VIEWS
+
+SQL> CREATE OR REPLACE VIEW TESTVIEW47473 AS SELECT  EMPNO,ENAME,SAL FROM EMP47473 WITH READ ONLY;
+
+[WITH READ ONLY | WITH CHECK OPTION]
+
+This option is used to prevent any changes to base table through view. Insertion and updation is not allowed into base table through view.
+
+SQL> CREATE OR REPLACE VIEW CHKVIEW AS SELECT * FROM EMP WHERE DEPTNO = 20 WITH CHECK OPTION;
+
+It doesn’t allow you to update the condition column as well as it doesn’t allow you to insert the details of employees with DEPTNO other than 20.
+
+To remove a view
+
+SQL> DROP VIEW <VIEWNAME>;
+
+CREATE OR REPLACE VIEW vw_empdept
+AS
+SELECT e.EmpNo,e.Ename,e.Job,e.Sal,e.DeptNo,d.DName,d.Loc
+FROM
+Emp e, Dept D
+WHERE
+e.DeptNo=d.DeptNo
+
+
+

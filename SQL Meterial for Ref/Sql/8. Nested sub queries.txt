@@ -1,0 +1,272 @@
+Sub Queries
+===========
+Nesting is the act of embedding a query within another query. 
+
+SYNTAX
+Select * FROM SOMETHING WHERE (SUBQUERY (SUBQUERY (SUBQUERY)));
+
+Whenever particular information is not accessible through a single query, then we have to write different queries one included in another.  
+
+Sub queries can be nested as deeply as your implementation of SQL allows. 
+
+Types of Sub Queries
+=====================
+i.  Single row sub queries
+ii. Multi row sub queries
+iii.Multi column sub queries
+
+iv. Correlated sub queries. 
+
+Single row sub query
+--------------------
+A Sub query which returns only one value.
+
+For example,
+
+To get the employee, who is drawing maximum salary?
+INPUT 
+
+
+SELECT ENAME,SAL FROM EMP WHERE SAL = (SELECT MAX(SAL) FROM EMP);
+
+OUTPUT
+ENAME             SAL
+------------        ----------
+KING                  5000
+
+ANALYSIS
+Right side query is called as child query and left side query is called parent query. In nested queries, child query executes first before executing parent query.
+
+INPUT 
+SQL> SELECT ENAME, HIREDATE FROM EMP WHERE HIREDATE = (SELECT   MAX(HIREDATE) FROM EMP);
+
+OUTPUT
+ENAME      HIREDATE
+---------- ---------
+ADAMS      12-JAN-83
+
+ANALYSIS
+Display the least experienced employee
+
+INPUT 
+SQL> SELECT ENAME,SAL FROM EMP WHERE SAL < (SELECT
+MAX(SAL) FROM EMP);
+
+ANALYSIS
+
+	Display all the employees whose salary is less than the maximum salary of Dept 10.
+
+Query
+
+To display all the employees whose salary lies between minimum and maximum salaries
+
+
+INPUT
+
+SQL> SELECT * FROM EMP WHERE SAL BETWEEN (SELECT MIN(SAL) FROM EMP) AND (SELECT MAX(SAL) FROM EMP);
+
+SQL>	SELECT * FROM EMP WHERE COMM = 
+(SELECT MAX(COMM) FROM EMP);
+
+Query
+
+Display all the employees from department 30 whose salary is 
+less than maximum salary of department 20.
+
+
+
+
+
+
+
+
+
+
+
+SQL> SELECT EMPNO,ENAME,SAL FROM EMP WHERE DEPTNO=30
+          AND SAL < (SELECT MAX (SAL) FROM EMP WHERE DEPTNO = 20);
+
+Multi row Sub queries
+=====================
+
+A sub query, which returns more than one value.
+INPUT
+SQL>SELECT ENAME,SAL FROM EMP WHERE SAL IN
+(SELECT SAL FROM EMP GROUP BY SAL HAVING COUNT(*)> 1);
+
+ANALYSIS
+Displays all the employees who are drawing similar salaries
+
+When child query returns more than one value, we have to use IN operator for comparison.
+
+Multi Column Sub Queries
+========================
+When sub queries returns values from different columns.
+
+SQL> SELECT EMPNO,ENAME,DEPTNO,SAL FROM EMP 
+     WHERE (DEPTNO,SAL) 
+     IN 
+     (SELECT DEPTNO,MAX(SAL) FROM EMP GROUP BY DEPTNO);
+ANALYSIS
+
+Display all the employees who are drawing maximum salaries in each department
+
+DML STATEMENTS IN SUB QUERIES 
+
+Update the salary of an employee who is drawing minimum salary with 
+the salary of the employee who is drawing maximum salary.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+UPDATE EMP SET SAL = (SELECT MAX(SAL) FROM EMP) 
+WHERE EMPNO = (SELECT EMPNO FROM EMP WHERE SAL = (SELECT MIN (SAL) FROM EMP));
+
+ANALYSIS
+Identify the employee who is drawing minimum salary and update with the maximum salary of all the employees.
+
+To insert selected rows from emp table to emp1 table
+
+SQL> INSERT INTO EMP1  SELECT * FROM EMP WHERE DeptNo=30;
+
+ANALYSIS
+   EMP1 is an existing table.  Inserts all the selected rows into EMP1 table.
+
+Display all the employees who are getting maximum commission in the organization
+
+SELECT * FROM Emp WHERE COMM = (SELECT MAX(Comm) FROM Emp);
+
+
+>ANY(val1,val2,val3) => Greater than min value in the list
+>ALL(val1,val2,val3) => Greater than max value in the list
+<ANY(val1,val2,val3) => Smaller than max value in the list
+<ALL(val1,val2,val3) => Smaller than min value in the list
+>=ANY
+<=ANY
+=ANY(10,20,30) OR IN
+=ALL[invalid]
+
+
+CORRELATED SUB QUERIES
+======================              
+A correlated sub query is a sub query that receives a value from the main query and then sends a value back to main query.
+
+In correlated subqueries inner query depends on outer query for its execution.
+
+Correlated subquery execute for each row of the outer query.
+
+For example
+Display all the employees whose salary is less than maximum salary of each department
+
+
+
+OuterQuery(InnerQuery)
+
+
+
+
+
+
+
+
+SQL> SELECT EMPNO,ENAME,DEPTNO,SAL FROM EMP X WHERE SAL < (SELECT MAX(SAL) 
+     FROM EMP WHERE DEPTNO = X.DEPTNO);
+
+ANALYSIS
+Find department wise maximum salaries and display the employees whose salary is less than that value for each department
+
+Execution Sequence of steps in Correlated sub queries
+=====================================================
+->A row from main query is retrieved
+->Executes sub query with the value retrieved from main query
+->Sub query returns a value to main query
+->Main query’s current row is either selected or not, depending upon the value passed by sub query.
+
+This continues until all rows of main query are retrieved
+
+ANY And  ALL Operators
+======================
+Both are used for comparing one value against a set of values.
+
+The operator can be any one of the standard relational operators
+ ( =, >=, >, <, <= , !=) and list is a series of values.
+
+SYNTAX
+
+Operator  ANY list
+Operator ALL list
+INPUT
+
+   value >  ALL(val1,val2,val3)
+   value >= ANY(val1,val2,val3)
+
+
+SQL> SELECT EMPNO,ENAME,SAL FROM EMP WHERE SAL > ANY(SELECT MAX(SAL) FROM EMP WHERE DeptNO=20);
+
+
+
+
+
+
+ANALYSIS
+>ANY displays greater than any values in the list.
+INPUT
+
+SQL> SELECT EMPNO,ENAME,SAL FROM EMP WHERE SAL < ANY (SELECT SAL FROM EMP);
+ANALYSIS
+
+ Less than ANY of the list of values
+
+INPUT
+
+SQL> SELECT EMPNO,ENAME,SAL FROM EMP WHERE SAL >ALL(SELECT SAL FROM EMP);
+
+OUTPUT
+
+no rows selected
+
+ANALYSIS
+
+Greater than Maximum of list
+INPUT
+
+SQL> SELECT EMPNO,ENAME,SAL FROM EMP WHERE SAL >ALL(3000,2000,4000);
+
+OUTPUT
+
+     EMPNO ENAME             SAL                                                                                        
+---------- ---------- ----------                                                                                        
+      7839 KING             5000                                                                                        
+
+ANALYSIS
+Greater than maximum of List
+
+INPUT
+
+SQL> SELECT EMPNO,ENAME,SAL FROM EMP WHERE SAL <ALL(3000,2000,4000);
+
+ANALYSIS
+Less than minimum of List
+
+EXISTS And NOT EXISTS Operators
+================================
+
+These two operators are exclusively used in correlated sub query. EXISTS checks whether any row is existing in the sub query, and NOT EXISTS does the opposite.
+
+EXISTS is different from other operators like IN , ANY etc, because it doesn’t compare values of columns, instead. It checks any row is retrieved from sub query or not. If any row is retrieved from sub query the EXISTS returns true otherwise it returns False.
+
+INPUT
+
+SQL> SELECT EMPNO,ENAME,SAL,MGR FROM EMP X WHERE EXISTS(SELECT MGR FROM EMP WHERE X.MGR = EMPNO);
+Note :Use EXISTS in place of IN for Base Tables to improve the performance.

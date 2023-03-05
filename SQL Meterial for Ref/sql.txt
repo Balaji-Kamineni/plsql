@@ -1,0 +1,1212 @@
+Data: 
+=====
+Any Raw materials[facts, figures, numbers etc] or 
+the unprocessed elements are called as data.
+
+Information: 
+============
+Processed data or meaningful data is called as Information.	   
+
+Process:
+========
+It is a kind of operation on the raw materials(ie.data) which produces information.
+
+
+
+Input	->	process		->	Output
+Data	->	[operations]	->	Information
+5, 4	->	[+]		-> 	9
+
+Database:
+Database is a datastructure which organizes the related data in a particular structure.
+
+It is an organized collection of related data. 
+
+Database allows to store as well as manipulate the data in an efficient manner.
+
+Manipulation: Insert,update, delete, retrieve, search, sort etc.
+
+DatabaseManagementSystem:
+=========================
+It is a system/software which manages the databases.
+Ex: 	Oracle -> Oracle Corporation
+	SqlServer -> Microsoft
+	MySQL -> Oracle Corporation
+
+Oracle: It is a RDBMS.(Relational Database Management System)
+
+Employee
+========
+EmpId	EmpName	  MobileNo    EmailID    EmpSal   EmpDesg     EmpCity
+101	Ajay	  9878787878  ajay@gmail 9000     Programmer  Hyd
+102	Ajay	  9878787878  ajay@gmail 9000     Programmer  Hyd
+103	Akshay	  9878787878  ajay@gmail 9000     Programmer  Hyd
+104	Ajay	  9878787878  ajay@gmail 9000     Programmer  Hyd
+
+
+Table itself is called as Relation.
+The column in the table is called as Attribute.
+No. of attributes in a table is called as degree of the table.
+The row with in table is called as tuple.
+The no. of tuples present in a table are called as Cardinality.
+Intersection of rows and columns are called as cell.
+
+
+SELECT *FROM Employee;
+SELECT *FROM EMPLOYEE WHERE EmpId = 103;
+SELECT EmpId, EMpName FROM Employee;
+
+	
+
+SQL(Structured Query Language)(Sequel)
+======================================
+It is a fourth generation language developed by IBM, which helps to communicate with any of the database.
+
+SQL Commands are divided into the following categories:
+
+DDL :	Data Definition Language
+	[CREATE, ALTER, DROP, RENAME, MODIFY, ADD, DESC, TRUNCATE etc.]
+
+DML :   Data Manipulation Language
+	[INSERT,UPDATE,DELETE,MERGE etc.]
+
+DCL :   Data Control Language
+	[GRANT, REVOKE]
+
+TCL :	Transaction Control Language
+	[COMMIT, ROLLBACK, SAVEPOINT]
+
+DQL/DRL:Data Query/Retrieval Language
+	SELECT
+
+To Create Table
+===============
+Syntax:
+	CREATE TABLE <TableName>
+	(Column1	Datatype1
+	,Column2	Datatype2
+	,Column3	Datatype3
+	,Column4	Datatype4);
+
+Ex:	CREATE TABLE Employee
+	(EmpId		 NUMBER(4)
+	,EmpName	 VARCHAR2(20)
+	,EmpSal		 NUMBER(8,2)  000000.00 
+	,EmpDesg	 VARCHAR2(20)
+	,MobileNo	 VARCHAR2(10));
+
+					     SQL*Plus
+					Command Line Interface			  											  							             Oracle
+EndUser => SQL Query =>   UserInterface		    Database  SqlServer
+							      MySql
+					Graphical User Interface	  	 
+					     SQL Developer
+To Describe a Table
+===================
+Syntax: DESC[RIBE] <TableName>
+Example: DESC[RIBE] Employee
+
+
+To Remove/Drop a Table
+======================
+Syntax: DROP TABLE <TableName>
+Example: DROP TABLE Employee;
+
+
+Modifying the table by adding a new column
+==========================================
+Syntax:  ALTER TABLE <TableName> ADD <ColumnName Datatype>
+
+Example: ALTER TABLE Employee ADD EmailId VARCHAR2(15)
+	 ALTER TABLE Employee ADD City VARCHAR2(15)
+
+Adding more than one column at a time
+=====================================
+Syntax: ALTER TABLE <TableName> ADD(ColumnName Type,ColumnName Type, ...)
+
+Example:ALTER TABLE Employee ADD( EmailID VARCHAR2(15),City VARCHAR2(15) )
+
+
+Modifying the table by changing the datatype of an existing column
+==================================================================
+Syntax: ALTER TABLE <TableName> MODIFY <ColumnName Datatype>
+
+Example:ALTER TABLE Employee MODIFY MobileNo NUMBER(10)
+
+Modifying the table by renaming the column name
+===============================================
+Syntax: ALTER TABLE <TableName> 
+	RENAME COLUMN <OldColumn> TO <NewColumn>
+
+Example: ALTER TABLE Employee RENAME COLUMN EmpSal TO EmpSalary
+
+
+Modifying the table by dropping a column
+========================================
+Syntax: ALTER TABLE <TableName> DROP COLUMN <ColumnName>
+
+Example: ALTER TABLE Employee DROP COLUMN MobileNo
+
+
+Modifying the table by adding NOT NULL to a column
+==================================================
+Syntax: ALTER TABLE <TableName> 
+	MODIFY  <ColumnName Datatype> NOT NULL
+Example: ALTER TABLE Employee MODIFY EmpId NUMBER(4) NOT NULL
+
+
+Primary Key: It is a column/key which identify the row uniquely.
+Primary Key = NOT NULL + UNIQUE
+Primary key column can't be null and it can't have duplicate values.
+
+Modifying the table by adding a Primary Key to a column
+=======================================================
+Syntax: ALTER TABLE <TableName>
+	ADD CONSTRAINT <ConstraintName>
+	<ConstraintType>(ColumnName)
+
+Example:ALTER TABLE Employee
+	ADD CONSTRAINT PK_EmpId
+	PRIMARY KEY(EmpId)
+
+
+Modifying the table by removing a constraint
+============================================
+Syntax: ALTER TABLE<TableName> 
+	DROP CONSTRAINT <ConstraintName>
+
+Example: ALTER TABLE Employee
+	DROP CONSTRAINT PK_EmpId
+
+
+Truncating the Table by removing all the records
+================================================
+Syntax : TRUNCATE TABLE <TableName>
+
+Example: TRUNCATE TABLE Employee
+
+Renaming a Table
+================
+Syntax: RENAME <Old TableName> TO <New TableName>
+
+Example: RENAME Employee TO tblEmployee;
+
+Dropping the Table
+==================
+Syntax: DROP TABLE <TableName>
+
+Example: DROP TABLE tblEmployee
+
+=================================================================
+
+Column Level
+============
+CREATE TABLE tblStudent
+(StudentId	 NUMBER(4)    PRIMARY KEY
+,StudentName	 VARCHAR2(20) NOT NULL
+,EmailID	 VARCHAR2(20) UNIQUE
+,MobileNO	 VARCHAR2(10)
+,Gender		 VARCHAR2(6)) 
+
+Table Level
+===========
+CREATE TABLE tblStudent1
+(StudentId	 NUMBER(4)
+,StudentName	 VARCHAR2(20) NOT NULL
+,EmailID	 VARCHAR2(20)
+,MobileNO	 VARCHAR2(10)
+,Gender		 VARCHAR2(6)
+,PRIMARY KEY(StudentId))
+
+
+CREATE TABLE tblStudent1
+(StudentID        NUMBER(4) CONSTRAINT PK_StudID PRIMARY KEY
+,StudentName	  VARCHAR2(20) NOT NULL
+,EmailID 	  VARCHAR2(20) CONSTRAINT UQ_EmailID UNIQUE
+,MobileNo	  VARCHAR2(10)
+,Gender 	  VARCHAR2(6) 
+CONSTRAINT CHK_Gender CHECK(Gender IN('Male','Female')))
+
+
+
+
+INSERT
+======
+INSERT command is a DML command.
+This command is used to insert a row/record into a table.
+
+Syntax:
+INSERT INTO <TableName>
+[(Column1, Column2, Column3, ...)]
+VALUES
+(Value1, Value2, Value3, ...)
+
+No. of columns in the column list and No. of values in the value list must match.
+
+Column list must include PRIMARY KEY column and NOT NULL columns.
+
+Column list is not mandatory. 
+
+When column list is not specified then all the values must be entered in which order the table is created.
+
+Column list is mandatory when partial values are entered for a row.
+
+Example:
+
+INSERT INTO tblStudent
+(StudentId, StudentName,EmailId,MobileNo,Gender,City)
+VALUES
+(101,'Ajay','ajay@gmail.com','9898787878','Male','NewDelhi')
+
+
+As StudentId is a primary key column, so null values or duplicate values can't be inserted into StudentId column.
+
+Make sure while inserting data into table, number of column and number of values must match.
+
+Inserting NULL values for a column
+INSERT INTO tblStudent
+(StudentId, StudentName,EmailId,MobileNo,Gender,City)
+VALUES
+(103,'Sameer',NULL,'9677675645','Male','Bangalore');
+
+INSERT INTO tblStudent
+(StudentId,StudentName,MobileNo,Gender,City)
+VALUES
+(104,'Naveen','9277675645','Male','Hyderabad')
+
+NULL values are allowed for a column on which UNIQUE constraint is applied.
+
+Even it allows multiple null values to be inserted for UNIQUE key column.
+
+The column list must include primary key and not null columns.
+
+Inserting default values for City Column.
+=========================================
+INSERT INTO tblStudent
+(StudentId, StudentName,EmailId,MobileNo,Gender)
+VALUES
+(106,'Vijay','vijay@gmail.com','7277675645','Male')
+
+To retrieve all the records from the table
+==========================================
+SELECT * FROM <TableName>
+SELECT * FROM tblStudent;
+
+Inserting Partial values to a table
+===================================
+While inserting partial values to a table, Column list is mandatory in INSERT query.
+
+NOT NULL and Primary Key column must be included in the Column list.
+
+When INSERT query doesn't contain Column list, then the values must be entered in the order in which order the table is created.
+
+INSERT INTO tblStudent
+(StudentName,StudentId,MobileNo,EmailId,City,Gender)
+VALUES
+('Roopesh',110,'9878675678','roopesh@gmail.com','Bangalore','Male');
+
+
+Creating a table from an existing table with Data
+=================================================
+CREATE TABLE <NewTableName>
+AS SELECT * FROM <OldTableName> [WHERE <Condition>]
+
+CREATE TABLE tblStudentCopy
+AS SELECT * FROM tblStudent;
+
+
+Creating a table from an existing table without Data
+(Only Structure)
+=====================================================
+CREATE TABLE tblStudCopy
+AS 
+SELECT * FROM tblStudent WHERE 1=2;
+
+
+Copying data from one table to other table using INSERT
+=======================================================
+INSERT INTO <ExistingTable1>
+SELECT * FROM <ExistingTable2>
+
+INSERT INTO tblStudent
+SELECT * FROM tblStud;
+
+
+SELECT 
+======
+It is a DQL/DRL command.
+
+This command is used to retrieve the records from a table.
+
+To retrieve all the records from the table
+==========================================
+Syntax: SELECT * FROM <TableName>
+
+* -> represents all the columns of the table.
+
+Example: SELECT * FROM tblStudent;
+
+To retrieve all the records with specific columns
+================================================= 
+Syntax: SELECT Column1, Column2, Column3 FROM <TableName>
+Example: SELECT StudentId, StudentName, City FROM tblStudent;
+
+Bydefault heading of the column will be same as Column name.
+
+Retrieve specific columns from the table with customized headings
+=================================================================
+Syntax: SELECT Col1 AS Heading1, Col2 AS Heading2 FROM <TableName>
+Syntax: SELECT Column1 Alias1, Column2 Alias2 FROM <TableName>
+
+Example: SELECT StudentId AS ID, StudentName as Name, City From tblStudent;
+	 SELECT StudentID ID, StudentName Name, City FROM tblStudent;
+
+Retrieving specific rows from a table
+=====================================
+When the SELECT query doesn't contain WHERE clause, then the query is applicable for each and every row.
+
+Syntax: SELECT *FROM <TableName> [WHERE <Condition>]
+
+Example: SELECT * FROM tblStudent WHERE Gender='Female'
+The above query will list all the female students.
+
+Retrieve all the employees those are not eligible for commission.
+SELECT * FROM Emp WHERE COMM IS NULL
+
+Retrieve all the employees those are eligible for commission.
+SELECT * FROM Emp WHERE COMM IS NOT NULL
+
+
+Display all the male students whose city is Bangalore
+SELECT * FROM tblStudent WHERE City='Bangalore' AND Gender='Male'
+
+Display all the students whose city is NewDelhi or Mumbai or Bangalore.
+
+SELECT StudentId, StudentName, City, Gender
+FROM
+tblStudent
+WHERE City='NewDelhi' OR City='Mumbai' OR City='Bangalore'
+
+               [or]
+
+SELECT StudentId, StudentName, City, Gender
+FROM
+tblStudent
+WHERE City IN('NewDelhi','Mumbai','Bangalore')
+
+
+SELECT StudentId, StudentName, City, Gender
+FROM
+tblStudent
+WHERE City NOT IN('NewDelhi','Mumbai','Bangalore')
+
+
+Display all the students those who don't have emailId.
+
+SELECT * FROM tblStudent WHERE EmailId IS NULL
+
+
+SELECT StudentID, MobileNo, EmailId
+FROM
+tblStudent
+WHERE (MobileNo IS NULL AND EmailID IS NOT NULL)
+OR
+(MobileNo IS NOT NULL AND EmailID IS NULL)
+
+
+101	Ajay	NULL	NULL
+102	Raj	987778	raj@gmail.com
+103	Ram	NULL	ram@gmail.com
+104	Sam	87677	NULL
+
+==========
+INSERT ALL
+==========
+sometimes, you may want to insert multiple rows into a table or multiple tables. In this case, you use the Oracle INSERT ALL statement, which is also referred to as a multitable insert statement.
+
+Oracle provides you with two types of multitable insert statements: 
+unconditional and conditional.
+
+Unconditional  INSERT ALL
+=========================
+Insert multiple rows into a table
+
+To insert multiple rows into a table, you use the following Oracle INSERT ALL statement:
+
+Syntax:
+-------
+INSERT ALL
+    INTO table_name(col1,col2,col3) VALUES(val1,val2, val3)
+    INTO table_name(col1,col2,col3) VALUES(val4,val5, val6)
+    INTO table_name(col1,col2,col3) VALUES(val7,val8, val9)
+Subquery;
+
+INSERT ALL
+    INTO table_name1(col1,col2,col3) VALUES(val1,val2, val3)
+    INTO table_name2(col1,col2,col3) VALUES(val4,val5, val6)
+    INTO table_name3(col1,col2,col3) VALUES(val7,val8, val9)
+Subquery;
+
+In this statement, each value expression val1, val2, or val3 must refer to a column returned by the select list of the subquery.
+
+If you want to use literal values instead of the values returned by the subquery, you use the following subquery:
+
+SELECT * FROM dual;
+
+===================
+
+The following example demonstrates how to insert multiple rows into a table.
+
+First, create a new table named fruits:
+
+CREATE TABLE fruits (
+    fruit_name VARCHAR2(30) PRIMARY KEY
+    ,color      VARCHAR2(20) NOT NULL
+    ,fruit_type VARCHAR2(15) NOT NULL
+);
+
+Second, use the Oracle INSERT ALL statement to insert rows into the fruits table:
+
+INSERT ALL 
+    INTO fruits(fruit_name, color)
+    VALUES ('Apple','Red')  
+    INTO fruits(fruit_name, color)
+    VALUES ('Orange','Orange')  
+    INTO fruits(fruit_name, color)
+    VALUES ('Banana','Yellow')
+SELECT * FROM dual;
+
+Third, query data from the fruits table to verify the insertion:
+
+SELECT * FROM fruits;
+
+Insert multiple rows into multiple tables
+-----------------------------------------
+Besides inserting multiple rows into a table, you can use the INSERT ALL statement to insert multiple rows into multiple tables as shown in the following syntax:
+
+INSERT ALL
+    INTO table_name1(col1,col2,col3) VALUES(val1,val2, val3)
+    INTO table_name2(col1,col2,col3) VALUES(val4,val5, val6)
+    INTO table_name3(col1,col2,col3) VALUES(val7,val8, val9)
+Subquery;
+
+Conditional INSERT ALL Statement
+--------------------------------
+The conditional multitable insert statement allows you to insert rows into tables based on specified conditions.
+
+The following shows the syntax of the conditional multitable insert statement:
+
+INSERT [ ALL | FIRST ]
+    WHEN condition1 THEN
+        INTO table_1 (column_list ) VALUES (value_list)
+    WHEN condition2 THEN 
+        INTO table_2(column_list ) VALUES (value_list)
+    ELSE
+        INTO table_3(column_list ) VALUES (value_list)
+Subquery
+
+	SELECT * FROM Fruits;
+	Fruit_Name	Fruit_Colour	Fruit_Type
+	==========	===========	===========
+	Lemon		Green		Citrus
+	Mango		Yellow		NonCitrus
+	Orange		Orange		Citrus
+
+
+
+
+Orders (OrderId,CustomerId,Qty,UnitPrice)
+=======================================
+OrderId	   CustomerId    Qty     UnitPrice  Amount
+101	   1001		 100	 120	    100*120	
+102	   1002		 500     180
+
+
+If you specify the ALL keyword, then Oracle evaluates each condition in the WHEN clauses. If a condition evaluates to true, Oracle executes the corresponding INTO clause.
+
+However, when you specify FIRST keyword, for each row returned by the subquery, Oracle evaluates each condition in the WHEN clause from top to bottom. If Oracle find a condition that evaluates to true, it executes the corresponding INTO clause and skips subsequent WHEN clauses for the given row.
+
+Conditional Oracle INSERT ALL example
+
+The following CREATE TABLE statements create three tables: small_orders, medium_orders, and big_orders with the same structures:
+
+CREATE TABLE small_orders (
+    order_id NUMBER(12) NOT NULL,
+    customer_id NUMBER(6) NOT NULL,
+    amount NUMBER(8,2) 
+);
+ 
+CREATE TABLE medium_orders AS
+SELECT * FROM small_orders;
+ 
+CREATE TABLE big_orders AS
+SELECT * FROM small_orders;
+
+
+The following conditional Oracle INSERT ALL statement inserts order data into the three tables small_orders, medium_orders, and big_orders based on orders’ amounts:
+
+INSERT ALL
+   WHEN amount <= 15000 THEN
+      INTO small_orders
+   WHEN amount >= 15001 AND amount <= 25000 THEN
+      INTO medium_orders
+   WHEN amount >= 25001 THEN
+      INTO big_orders      
+  SELECT orderid,customerid,(qty * unitprice) amount
+  FROM orders
+
+Conditional Oracle INSERT FIRST example
+
+Consider the following example:
+INSERT FIRST
+    WHEN amount > 30000 THEN
+        INTO big_orders
+    WHEN amount >= 10000 THEN
+        INTO medium_orders
+    WHEN amount > 0 THEN
+        INTO small_orders
+ SELECT order_id,
+         customer_id,
+         (quantity * unit_price) amount
+ FROM orders
+==============================================
+
+EmpId EmpName EmpSal EmpDesg EmailId MobileNo 	DeptName	DeptLoc
+101						IT		Hyderabad
+102						HR		Bangalore
+103						IT		Hyderabad
+104						IT		Hyderabad
+105						HR		Bangalore
+106						IT		Hyderabad
+
+
+Employee
+========
+EmpId 	EmpName EmpSal  EmpDesg 	EmailId 	MobileNo    DeptId	
+101	Ajay	8000	Programmer	ajay@gmail.com	9878765654	10
+102									20
+103									10
+
+Department
+==========
+DeptId	DeptName	DeptLoc
+10	IT		Hyderabad
+20	SALES		Mumbai	
+30	MARKETING	Pune
+40	OPERATION	Bengaluru
+
+
+
+tblDepartment
+=============
+DeptId		NUMBER(3)	PRIMARY KEY
+DeptName	VARCHAR2(15)
+DeptLoc		VARCHAR2(15)
+
+CREATE TABLE tblDepartment
+(DeptId		NUMBER(3) 
+,DeptName	VARCHAR2(15)
+,DeptLoc	VARCHAR2(15)
+,CONSTRAINT PK_DeptID PRIMARY KEY(DeptId));
+
+tblEmployee
+===========
+CREATE TABLE tblEmployee
+(EmpId		 NUMBER(4)	 PRIMARY KEY
+,EmpName	 VARCHAR2(20)	 NOT NULL
+,EmpSal		 NUMBER(8,2)
+,EmpDesg	 VARCHAR2(20)
+,MobileNo	 VARCHAR2(10)	 UNIQUE
+,EmailID	 VARCHAR2(20)    UNIQUE
+,City		 VARCHAR2(15)	 DEFAULT  'Hyderabad'
+,Gender		 VARCHAR2(6)	 CHECK(GENDER IN('Male','Female'))
+,DeptID		 NUMBER(3)	 REFERENCES tblDepartment(DeptId));
+
+Customer
+========
+CustomerId(Primary Key)
+CustomerName
+City
+MobileNo
+EmailId
+
+CREATE TABLE Customer
+(CustomerId	 NUMBER(4) 	CONSTRAINT PK_CustomerId PRIMARY KEY
+,CustomerName    VARCHAR2(10) 	NOT NULL
+,City		 VARCHAR2(12)
+,MobileNO	 VARCHAR2(10)
+,EmailID	 VARCHAR2(15));
+
+CustomerId	CustomerName	City	MobileNo	EmailId
+1001		Sameer		Pune	9887766654	sam@gmail.com
+1002		Naveen		Mumbai	9887766554	nav@gmail.com
+1003		Sunil		-		-		-
+
+
+Product
+=======
+ProductId(Primary Key)
+ProductName
+UnitPrice
+Category
+Description
+
+CREATE TABLE Product
+(ProductId	 NUMBER(4) 	CONSTRAINT PK_ProductId PRIMARY KEY
+,ProductName	 VARCHAR2(10) 	NOT NULL
+,UnitPrice	 NUMBER(4)
+,Category	 VARCHAR2(10)
+,Description	 VARCHAR2(12));
+
+ProductId	ProductName	UnitPrice	Category	Description
+101		Mouse		400		Input		InputDevice
+102		Pencil		5		Stationary	Stationary
+103		HardDisk	5000		Storage		Storage
+
+
+Order
+=====
+OrderId(Primary Key)
+CustomerId(Foreign Key)
+ProductId(Foreign Key)
+OrderDate
+
+CREATE TABLE Orders
+(OrderId	 NUMBER(4) CONSTRAINT PK_OrderId PRIMARY KEY
+,CustomerId	 NUMBER(4) REFERENCES Customer(CustomerId)
+,ProductId	 NUMBER(4) REFERENCES Product(ProductId)
+,OrderDate	 DATE)
+
+OrderId		CustomerId	ProductId	OrderDate
+10001		1001		101		9-Feb-2022
+10002		1001		102		5-Jan-2022
+10003		1003		101		7-Dec-2021
+
+
+CREATE TABLE Orders
+(OrderId	NUMBER(4)
+,CustomerId	NUMBER(4)
+,ProductId	NUMBER(4)
+,OrderDate	DATE
+,PRIMARY KEY(OrderId) 
+,FOREIGN KEY(CustomerId) REFERENCES Customer(CustomerId)
+,FOREIGN KEY(ProductId) REFERENCES Product(ProductId));
+
+
+CREATE TABLE Orders
+(OrderId	 NUMBER(4)
+,CustomerId	 NUMBER(4)
+,ProductId	 NUMBER(4)
+,OrderDate	 DATE
+,CONSTRAINT PK_OrderID PRIMARY KEY(OrderId) 
+,CONSTRAINT FK_CustomerId FOREIGN KEY(CustomerId) REFERENCES Customer(CustomerId)
+,CONSTRAINT FK_ProductId FOREIGN KEY(ProductId) REFERENCES Product(ProductId));
+
+
+Foreign key is the key or column which refers to the primary key/column of another table.
+
+Table which contains the primary key is called as Parent Table
+
+Table which contains the foreign key is called as Child Table.
+
+Parent Table => Dept(DeptNo-PrimaryKey)
+Child Table  => Emp(DeptNo-ForeignKey)
+
+Whenever we insert record into child table, it will make sure that the value entered for the foreign key column must be present in primary key column of parent table.
+
+
+Id  Name  Sal  Desg  deptName deptLoc 
+10                    IT      Hyderabad
+20	              IT      Hyderabad
+30	              Sales   Bangalore
+
+Location
+========
+LocID	LocName
+1000    Hyderabad
+
+Dept
+====
+DeptId   DeptName  LocId
+10	IT	    1000
+20	Sales	    1001
+30	Operation   1000	
+
+Emp
+===
+ID  Name  Sal   Desg  DeptId
+101			10
+102			70
+
+
+tblEmployee
+===========
+CREATE TABLE tblEmployee
+(EmpId		NUMBER(4)
+,EmpName	VARCHAR2(20) NOT NULL
+,EmpSal		NUMBER(8,2)
+,EmpDesg	VARCHAR2(20)
+,MobileNo	VARCHAR2(10)
+,EmailId	VARCHAR2(15)
+,City		VARCHAR2(15) DEFAULT 'Hyderabad'
+,Gender		VARCHAR2(8)
+,DeptId		NUMBER(3)
+,CONSTRAINT PK_EmpId PRIMARY KEY(EmpId)
+,CONSTRAINT UQ_MobileNo UNIQUE(MobileNo)
+,CONSTRAINT UQ_Email UNIQUE(EmailId)
+,CONSTRAINT FK_DeptID FOREIGN KEY(DeptId) 
+REFERENCES tblDepartment(DeptId));
+
+Foreign key establish the relation between two tables as parent and child.
+
+//Adding Check constraint to GENDER column
+ALTER TABLE tblEmployee
+ADD CONSTRAINT CHK_GNDR 
+CHECK(GENDER IN('Male','Female'))
+
+
+SELECT TABLE_NAME FROM USER_CONSTRAINTS
+WHERE
+CONSTRAINT_NAME='CHK_GENDER';
+
+
+SELECT TABLE_NAME FROM USER_CONSTRAINTS
+WHERE
+CONSTRAINT_NAME LIKE 'CHK%'
+
+
+DELETE
+======
+It is a DML Command, which is used to remove the record(s) /specific record from a given table.
+
+Remove all the records from a table
+===================================
+Syntax: DELETE FROM <TableName>
+Example: DELETE FROM tblEmployee;
+
+Remove all the records from a table based on a condition.
+=========================================================
+Syntax: DELETE FROM <TableName> WHERE <Condition>
+
+Example: DELETE FROM tblEmployee WHERE EmpCity='Bangalore';
+
+DELETE FROM tblEmployee WHERE EmailID IS NULL;
+
+DELETE FROM tblEmployee WHERE EmpCity='Hyderabad' OR EmpCity='Bangalore'
+			[OR]
+DELETE FROM tblEmployee WHERE EmpCity IN('Hyderabad','Bangalore');
+
+DELETE FROM tblEmployee WHERE EmpCity NOT IN('Hyderabad','Bangalore');
+
+
+DELETE FROM tblEmployee WHERE EmpSal >= 10000 AND EmpSal <= 20000;
+DELETE FROM tblEmployee WHERE EmpSal BETWEEN 10000 AND 20000;
+
+DELETE FROM tblEmployee WHERE EmpSal NOT BETWEEN 10000 AND 20000;
+DELETE FROM tblEmployee WHERE EmpSal < 10000 OR EmpSal > 20000;
+
+DELETE FROM tblEmployee WHERE EmpName='Sunil';
+DELETE FROM tblEmployee WHERE EmpName LIKE 'S%'
+DELETE FROM tblEmployee WHERE EmpName LIKE 'A___';
+DELETE FROM tblEmployee WHERE EmpName LIKE '%x%'
+DELETE FROM tblEmployee WHERE EmpName NOT LIKE 'S%'
+
+UPDATE
+======
+It is a DML command, which is used to update a single column or more than one column at a time for all the rows/specific rows of a given table.
+
+Update all the records 
+======================
+Syntax: UPDATE <TableName> SET <ColumnName=value>
+Example: UPDATE tblEmployee SET EmpCity='Hyderabad'
+
+Update specific record in a table
+=================================
+Syntax:  UPDATE <TableName> SET <ColumnName=value> 
+  	 WHERE <Condition>
+Example: UPDATE tblEmployee SET EmpSal=10000 WHERE EmpCity='Hyderabad'
+
+UPDATE tblEmployee SET EmpSal=EmpSal+(.1*EmpSal);
+
+UPDATE tblEmployee SET EmpSal=EmpSal+EmpSal*(10/100);
+
+SELECT EmpID, EmpName, EmpSal AS OldSalary,
+EmpSal*.1 AS Hike, EmpSal+EmpSal*.1 AS NewSalary
+FROM tblEmployee;
+
+
+//Generating Calculated Columns for a table
+SELECT  EmpID AS ID,
+  	EmpSal AS Basic,
+  	EmpSal*.5 AS DA,
+  	EmpSal*.3 AS HRA,
+  	EmpSal*.2 AS TA,
+  	EmpSal*.12 AS PF,
+  	EmpSal+EmpSal*.5+EmpSal*.3+EmpSal*.2-EmpSal*.12 AS NetSal
+  	FROM tblEmployee;
+
+
+
+
+Syntax:ORDER BY Clause
+======================
+ORDER BY Clause is used to display the records in a sorted order(either ascending or descending) according to a single column or multiple column values.
+
+By default it display in ascending order.
+
+ORDER BY clause must be the last clause in SELECT.
+
+SELECT <Column1, Column2, Column3>
+FROM
+<TableName>
+ORDER BY <ColumnName>,[ColumnName,ColumnName]
+[ASC|DESC] [NULLS FIRST|NULLS LAST]
+
+
+SELECT StudentId, StudentName, MobileNo, City
+FROM
+tblStudent
+ORDER BY StudentName;
+                       [OR]
+SELECT StudentId, StudentName, MobileNo, City
+FROM
+tblStudent
+ORDER BY StudentName ASC;
+
+
+SELECT StudentId, StudentName, MobileNo, City
+FROM
+tblStudent
+ORDER BY StudentName DESC;
+
+
+SELECT StudentId, StudentName, MobileNo, City
+FROM
+tblStudent
+ORDER BY StudentName, StudentId;
+
+
+SELECT StudentId, StudentName, MobileNo, City
+FROM
+tblStudent
+ORDER BY StudentName DESC, StudentId DESC;
+
+
+SELECT StudentId, StudentName, MobileNo, City
+FROM
+tblStudent
+ORDER BY MobileNo NULLS LAST
+
+
+SELECT StudentId, StudentName, MobileNo, City
+FROM
+tblStudent
+ORDER BY MobileNo NULLS FIRST
+
+
+SELECT StudentId, StudentName, MobileNo, City
+FROM
+tblStudent
+ORDER BY 2,1
+
+SELECT StudentId, StudentName, MobileNo, City
+FROM
+tblStudent
+ORDER BY 2 DESC, 1 DESC 
+
+SELECT StudentId, StudentName, MobileNo, City
+FROM
+tblStudent
+WHERE City='Bangalore'
+ORDER BY StudentName DESC
+
+=====================================================
+Assigning Identity to a Column while creating a table
+=====================================================
+SYNTAX:
+
+CREATE TABLE <TableName>
+(Column1 Datatype1 GENERATED [ALWAYS | BY DEFAULT [ON NULL] ]
+ AS IDENTITY [START WITH n1 INCREMENT BY n2 CACHE size]
+,Column2 Datatype2);
+
+
+CREATE TABLE tblProduct
+    (ProductID         NUMBER(4) GENERATED ALWAYS AS IDENTITY
+    ,ProductName       VARCHAR2(20)
+    ,UnitPrice         NUMBER(6,2)
+    ,QtyOnHand         NUMBER(3)
+    ,Description       VARCHAR2(20));
+
+
+INSERT INTO tblProduct
+(ProductName,unitPrice,qtyOnHand,Description)
+VALUES
+('Keyboard', 400, 100, 'InputDevice')
+
+Whenever trying to insert a value for an Identity column as follows:
+
+INSERT INTO tblProduct
+(ProductId,ProductName,unitPrice,qtyOnHand,Description)
+VALUES
+(102,'Keyboard', 400, 100, 'InputDevice')
+
+ORA-32795: cannot insert into a generated always identity column
+
+==========================================
+CREATE TABLE tblCustomer
+  (CustomerID  NUMBER(4)  GENERATED BY DEFAULT AS IDENTITY
+  ,CustomerName VARCHAR2(20) NOT NULL);
+
+INSERT INTO tblCustomer
+   (CustomerName)
+   VALUES
+   ('Ajay');
+
+INSERT INTO tblCustomer
+    (CustomerID,CustomerName)
+    VALUES
+    (2,'Sunil');
+
+When we are trying to insert null values to an identity column as follows:
+
+INSERT INTO tblCustomer
+    (CustomerID,CustomerName)
+    VALUES
+    (null,'Sunil');
+
+ERROR at line 4:
+ORA-01400: cannot insert NULL into ("SYS"."TBLCUSTOMER"."CUSTOMERID")
+==================================
+
+CREATE TABLE tblCourse
+(CourseID  NUMBER(4) GENERATED BY DEFAULT ON NULL AS IDENTITY
+,CourseName VARCHAR2(20)
+,CourseFees NUMBER(4))
+
+INSERT INTO tblCourse (CourseName) VALUES ('C');
+
+INSERT INTO tblCourse
+(courseId,CourseName,CourseFees)
+VALUES
+(11,'C++',8000);
+
+
+INSERT INTO tblCourse
+(courseId,CourseName,CourseFees)
+VALUES
+(NULL,'Oracle',5000);
+
+
+CREATE TABLE tblCustomer
+(CustomerId  NUMBER(4) GENERATED ALWAYS AS IDENTITY START WITH 100
+,CustomerName VARCHAR2(20));
+
+
+CREATE TABLE tblCustomer
+(CustomerId  NUMBER(4) GENERATED ALWAYS AS IDENTITY 
+ START WITH 100 INCREMENT BY 2
+,CustomerName VARCHAR2(20));
+
+
+CREATE TABLE tblCustomer
+(CustomerId  NUMBER(4) GENERATED ALWAYS AS IDENTITY 
+ START WITH 100 INCREMENT BY 2 CACHE 10
+,CustomerName VARCHAR2(20));
+
+
+INSERT INTO tblCustomer VALUES ('Rajesh')
+
+INSERT INTO tblCustomer VALUES (101,'Rajesh')
+
+INSERT INTO tblCustomer
+(CustomerId,CustomerName)
+VALUES
+(101,'Rajesh')
+
+INSERT INTO tblCustomer
+(CustomerName)
+VALUES
+('Rajesh');
+==================================================================================
+
+
+Syntax:
+=======
+CREATE SEQUENCE <SEQUENCENAME>
+[INCREMENT BY n]
+[START WITH n]
+[MINVALUE n | NOMINVALUE]
+[MAXVALUE n | NOMAXVALUE]
+[CYCLE | NOCYCLE]
+[CACHE n]
+
+
+CREATE TABLE tblProduct
+    (ProductID         NUMBER(4) PRIMARY KEY
+    ,ProductName       VARCHAR2(20)
+    ,UnitPrice         NUMBER(6,2)
+    ,QtyOnHand         NUMBER(3)
+    ,Description       VARCHAR2(20));
+
+CREATE SEQUENCE seqCustomer;
+By default it starts with 1, increment by 1.
+
+CREATE SEQUENCE seqProduct
+INCREMENT BY 1
+START WITH 1
+
+To get the next value from a sequence.
+SELECT seqCustomer.NEXTVAL FROM DUAL;
+
+To get the current value of a sequence.
+SELECT seqCustomer.CURRVAL FROM DUAL;
+
+ CREATE SEQUENCE seqProduct INCREMENT BY 2 START WITH 100;
+
+ INSERT INTO tblProduct
+ (ProductId, ProductName)
+ VALUES
+ (seqProduct.NEXTVAL, 'Mouse');
+ ===================================
+AGGREGATE FUNCTIONS
+=====
+UNION
+=====
+UNION operator is used to display the distinct records from multiple tables.
+
+{1,3,5,7,9} UNION {2,3,4,5,7,8,9}
+
+{1,2,3,4,5,7,8,9}
+
+{1,3,5,7,9} UNION ALL {2,3,4,5,7,8,9}
+{1,2,3,3,4,5,5,7,8,9}
+
+SELECT * FROM <Table1>
+UNION
+SELECT * FROM <Table2>
+
+No of column in Table1 and Table2 and their datatype must be same.
+
+It will display the distinct rows from both table1 and table2.
+
+
+Table1    	Table2	   Result
+ 1		  1	     1
+ 2       UNION    4	     2
+ 3                5          3
+			     4
+                             5   
+
+SELECT * FROM <Table1>
+UNION ALL
+SELECT * FROM <Table2>
+
+Table1    	Table2	   Result
+ 1		  1	     1
+ 2      UNION All 4	     1
+ 3                5          2
+			     3
+                             4  
+			     5 
+
+Difference between UNION and JOIN
+==================================
+Table1			Table2
+======			======
+col1 col2 col3		col4 col5 col6
+1    a    aa		1     x    xx
+2    b    bb		2     y    yy
+3    c    cc		3     z    zz
+
+
+Table1 JOIN Table2 ON t1.col1==t2.col4
+
+col1   col2   col3   col4     col5    col6
+1	a	aa	1	x	xx
+2	b	bb	2	y	yy
+3	c	cc	3	z	zz
+
+Table1 UNION Table2
+
+col1   col2   col3
+1	a	aa
+2	b	bb
+3	c	cc
+1	x 	xx
+2	y	yy
+3	z 	zz
+
+INTERSECT
+=========
+This operator is used to display the common records from both tables.
+
+{1,3,5,7,9,10} INTERSERCT {2,3,4,5,6,7};
+{3,5,7}
+
+syntax:
+SELECT *FROM <Table1>
+INTERSECT
+SELECT *FROM <Table2>
+
+ex:
+SELECT * FROM empCopy
+INTERSECT
+SELECT * FROM emp;
+
+MINUS
+=====
+This operator is used to display the unique records from the first table.
+{1,2,3,4,5} MINUS {1,2,3,6,7}
+{4,5}
+
+syntax:
+SELECT * FROM <Table1>
+MINUS
+SELECT * FROM <Table2>
+
+ex:
+SELECT * FROM tblEmpCopy
+MINUS
+SELECT * FROM tblEmp;
+
+
+===================
+Aggregate Functions
+===================
+Functions which works on a group of records are called as Aggregate Functions/Group functions.
+
+There are 5 aggregate functions.
+i  . sum()
+ii . count()
+iii. min()
+iv . max()
+v  . avg()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

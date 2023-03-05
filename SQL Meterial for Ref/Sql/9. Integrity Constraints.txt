@@ -1,0 +1,304 @@
+INTEGRITY CONSTRAINTS
+  
+Constraints are used to implement standard rules such as uniqueness in the key filed and business rule such as AGE column should contain a value between 15 and 60 etc.
+
+Oracle server makes sure that the constraints are not violated whenever a row is inserted, deleted or updated. If constraint is not satisfied the operation will fail.
+
+Constraints are normally defined at the time of creating table. But it is also possible to define constraints after the table is created. 
+
+TYPES OF CONSTRAINTS
+--------------------------------------
+Constraints are classified into two types
+
+Table Constraints
+Column Constraints
+
+Table Constraint  A constraint given at the table level is called as Table Constraint. It may refer to more than one column of the table.
+
+A typical example is PRIMARY KEY constraint that is used to define composite primary key.
+
+Column Constraint A constraint given at the column level is called as Column constraint. It defines a rule for a single column. It cannot refer to column other than the column, at which it is defined, 
+A typical example is PRIMARY KEY constraint when a single column is the primary key of the table.
+
+Various types of Integrity constraints
+
+PRIMARY KEY
+UNIQUE
+NOT NULL
+CHECK
+
+PRIMARY KEY  It is used to uniquely identify rows in a table. There can be only one primary key in a table. It may consist of more than one column, if so, it is called as composite primary key. ( It maintains uniqueness in the data and null values are not acceptable).
+
+i.e. UNIQUE + NOT NULL = PRIMARY KEY
+• Automatically creates unique index to enforce uniqueness.
+
+UNIQUE    Maintains unique and NULL values are acceptable.
+
+•Oracle automatically creates a unique index for the column.
+
+Example :  EmailID
+
+A UNIQUE key integrity constraint requires that every value in a column or set of columns (key) be unique- that is, no two rows of table can have duplicate values in a specified column or set of columns.  The column (or set of columns) included in the definition of the UNIQUE key constraint is called the unique key. If the UNIQUE constraint comprises more than one column, the group of columns is called a composite unique key.
+
+CHECK :
+------------        Defines the condition that should be satisfied before insertion and updating is done.
+
+Defines a condition that each row must satisfy.
+
+
+DDL ( Data Definition language)
+          Create,  Alter,  Drop
+--------------------------------------------
+DDL STATEMENTS COMMITS AUTOMATICALLY. There is no need to save explicitly.
+
+Creating a Table:
+
+CREATE TABLE <TABLE-NAME> (COLUMN DEFINITION1, COLUMN DEFINITION2);
+Syntax :-
+
+
+Column Def :
+    <Name> Data type [Default Value] [constraint <name> constraint type]
+
+Note: = Min. Column in a table = 1
+             Max. Columns in a table = 1000
+
+Rules: - 
+
+1. A table or a column name must never start a number but they can contain numbers in them
+2. They can’t consist of any special characters other than “$”, “#”, “-“, "_"
+i.e. $,# are used mainly for system tables.
+
+SQL>CREATE TABLE EMPL47473 (EMPNO NUMBER (3) CONSTRAINT  PK_EMPL47473_EMPNO PRIMARY KEY, ENAME VARCHAR2 (10) NOT NULL, GENDER  CHAR(1) CONSTRAINT 
+          CHK_EMPL47473_GENDER  CHECK(UPPER (GENDER) IN 
+         ('M','F')),  EMAIL_ID VARCHAR2 (30) UNIQUE, DESIGNATION    
+         VARCHAR2 (15), SALARY NUMBER (7,2) CHECK (SALARY 
+         BETWEEN 10000 AND 70000));
+Note : 
+Constraint name is useful for manipulating the given constraint
+When the constraint name is not given at the time of defining constraints, system creates a constraint with the name SYS_Cn.
+Constraints defined on a particular table are store in a data dictionary table  USER_CONSTRAINTS,  USER_CONS_COLUMNS.
+Tables defined by a user are stored in a data dictionary table USER_TABLES
+
+SQL> DESCRIBE  USER_CONSTRAINTS
+SQL> SELECT CONSTRAINT_NAME,   CONSTRAINT_TYPE,             SEARCH_CONDITION FROM USER_CONSTRAINTS
+          WHERE TABLE_NAME = 'EMPL47473';
+
+ANALYSIS
+Describe displays structure of the data dictionary table.
+
+SQL> DESCRIBE  USER_CONS_COLUMNS
+SQL> SELECT CONSTRAINT_NAME,COLUMN_NAME FROM USER_CONS_COLUMNS WHERE TABLE_NAME = 
+           'EMPL47473';
+ANALYSIS
+Describe displays structure of the data dictionary table.
+Select statement is used to view the constraints defined on the column
+
+ALTER TABLE
+Used to modify the structure of a table
+
+SYNTAX
+ALTER TABLE <TABLENAME> [ ADD | MODIFY | DROP | RENAME]   ( COLUMN(S));
+
+ADD                  -  for adding new columns into the table
+MODIFY           - for modifying the structure of columns
+DROP                - for removing  a column in the table  ( 8i)
+RENAME         -  for renaming the column name ( Only from 9i)
+
+SQL> ALTER TABLE EMPL47473 ADD (ADDRESS 
+           VARCHAR2 (30), DOJ DATE,PINCODE VARCHAR2(7));
+SQL> ALTER TABLE EMPL47473 MODIFY (ENAME 
+           CHAR (15), SALARY NUMBER (8,2));
+SQL>  ALTER TABLE EMPL47473 DROP COLUMN 
+            PINCODE;
+SQL> ALTER TABLE EMPL47473 DROP 
+           (DESIGNATION,ADDRESS);
+
+  SQL> ALTER TABLE EMPL47473 RENAME COLUMN 
+            ENAME TO EMPNAME
+
+Note: This command is also useful for manipulating constraints
+
+INPUT
+SQL> ALTER TABLE EMPL47473 DROP PRIMARY KEY;
+
+ANALYSIS
+To remove the primary key from table. Other constraints are removed only by referring constraint name.
+INPUT
+SQL>ALTER TABLE EMPL47473 ADD PRIMARY KEY(EMPNO);
+ANALYSIS
+To add primary key in the  table with out constraint name. It creates constraint name with SYS_Cn.
+
+INPUT
+SQL>ALTER TABLE EMPL47473 ADD CONSTRAINT PK_EMPL47473_EMPNO PRIMARY KEY(EMPNO);
+
+ANALYSIS
+To add primary key in the table with constraint name
+
+DATA MANIPULATION
+
+INSERTING ROWS
+SYNTAX
+INSERT INTO TABLENAME [ COLUMNNAME,COLUMNNAME,….]
+SQL> INSERT INTO EMPL47473 VALUES(101,’RAVI’,’M’,
+           ‘ORBIT@YAHOO.COM’,25000,’10-JAN-2001’);
+                                      OR
+SQL> INSERT INTO EMPL47473 VALUES(&EMPNO , ’&EMPNAME’,’&GENDER’,’&EMAIL_ID’,&SALARY,’&DOJ’);
+
+TO INSERT SPECIFIED COLUMNS IN THE TABLE
+
+SQL> INSERT INTO EMPL47473(EMPNO,EMPNAME,SALARY) 
+           VALUES(101,’RAVI’, 5000);
+                                      OR
+SQL> INSERT INTO EMPL47473(EMPNO,EMPNAME,SALARY) 
+           VALUES(&EMPNO,’&EMPNAME’,&SALARY);
+          
+ANALYSIS
+We can’t skip primary key and NOT NULL columns
+
+Note :- Changes made on the database are recorded only in the shadow page. For saving the information we have to use a command COMMIT, ROLLBACK.SAVEPOINT ( Called as Transactional processing statements)
+
+SQL>COMMIT;
+
+ANALYSIS
+
+Information from shadow page flushed back to the table and shadow page gets destroyed automatically.
+SQL>ROLLBACK;
+
+ANALYSIS
+
+Shadow page destroys automatically without transferring the information back to the table.
+
+  SAVEPOINT
+
+We can use save points to roll back portions of your current set of transactions
+
+For example
+SQL> INSERT INTO EMPL47473 VALUES(105,’KIRAN’,’M’,
+           ‘KIRAN_B@YAHOO.COM’,5000,’10-JAN-2001’);
+
+SQL> SAVEPOINT A
+SQL> INSERT INTO EMPL47473 VALUES(106,’LATHA’,’F’,
+           ‘LATHA_D@YAHOO.COM’,5000,’15-JAN-2002’);
+
+SQL> SAVEPOINT B
+SQL> INSERT INTO EMPL47473 VALUES(107,’RADHA’,’F’,
+           'RADHA_V@GMAIL.COM’,15000,’15-JAN-2002’);
+
+When we SELECT data from the table
+SQL> SELECT * FROM EMPL47473;
+The output shows the three new records we’ve added . Now roll back  just the last insert:
+SQL> ROLLBACK TO B;
+
+The actions that will force a commit to occur, even without your instructing it to, or quit, exit (the equivalent to exit), any DDL command forces a commit.
+
+AUTO ROLLBACK
+
+  If you’ve completed a series of inserts, updates or deletes, but not yet explicitly or implicitly committed them, and you experience serious difficulties, such as a computer failure, Oracle automatically roll back any uncommitted work. If the machine or database goes down, it does this as cleanup work the next time the database is brought back up.
+
+Note : 
+
+Rollback works only on uncommitted data
+A DDL transaction after a DML transaction, automatically commits.
+We can use an Environment command SET VERIFY OFF to remove the old and new messages while inserting data.
+
+ISSUE Frequent commit statements
+
+Whenever possible, issue frequent COMMIT statements in all your programs. By issuing frequent COMMIT statements, the performance of the program is enhanced & its resource requirements are minimized as COMMIT frees up the following resources:
+
+Information held in the rollback segments to undo the transaction if necessary.
+
+All locks acquired during statement processing
+
+Space in the redo log buffer cache
+
+Overhead associated with any internal Oracle mechanisms to manage the resources in the previous three items.
+
+CREATING A TABLE FROM ANOTHER TABLE
+
+SYNTAX
+CREATE TABLE <TABLENAME> AS SELECT <COLUMNS> FROM
+ <EXISTING TABLE>  [WHERE <CONDITION>];
+Example:
+SQL> CREATE TABLE EMP47473 AS SELECT EMPNO,ENAME,SAL,JOB 
+          FROM  EMP;
+To add a new column in the table
+
+SQL> ALTER TABLE EMP47473 ADD(SEX CHAR(1));
+
+UPDATING ROWS
+
+This command is used to change the data of the table
+SYNTAX
+
+UPDATE <TABLENAME> SET column1 = expression, column2 = expression WHERE <condition>; 
+SQL> UPDATE EMP47473 SET SAL = SAL*1.1;
+SQL>  COMMIT;
+ANALYSIS
+To give uniform increments to all the employees
+SQL> UPDATE EMP47473 SET SAL = DECODE (JOB,’CLERK’,SAL*1.1, 
+        'SALESMAN’,SAL*1.2,SAL*1.15);
+
+SQL> UPDATE EMP47473 SET SEX = 'M’ WHERE ENAME IN
+         ('KING’,’MILLER’,’BLAKE’);
+SQL> COMMIT / ROLLBACK;
+SQL> SELECT * FROM EMP47473;
+SQL> UPDATE EMP47473 SET SEX = ‘F’ WHERE SEX IS NULL;
+SQL> COMMIT / ROLLBACK;
+SQL> SELECT * FROM EMP47473 ;
+SQL> UPDATE EMP47473 SET ENAME = 
+           DECODE(SEX,’M’,’Mr.’||ENAME,’Ms.’||ENAME);
+SQL> COMMIT / ROLLBACK;
+ANALYSIS
+ADD Mr. or Ms. Before the existing name as per the SEX value
+
+DELETING ROWS
+--------------------------
+SYNTAX
+DELETE FROM <TABLENAME>  WHERE <CONDITION>;
+SQL> DELETE FROM EMP47473 WHERE SEX = 'M’;
+
+TRUNCATING A TABLE
+-----------------------------------
+SYNTAX
+
+TRUNCATE TABLE <TABLENAME>
+
+Note : Removes all the rows from table. Deleting specified rows is Not possible.  Once the table is truncated, it automatically commits. It is a DDL statement
+
+Droping a table
+----------------------
+SYNTAX
+
+DROP TABLE <TABLENAME>
+
+Note : Table is dropped permanently. It is a DDL statement.
+             It removes the data along with table definitions and the table.   
+
+REFERENTIAL INTEGRITY CONSTRAINTS
+
+This constraint is useful for maintaining relation with other table.
+
+Various referential integrity constraints we can use in Oracle are
+
+Foreign Key
+References
+On delete cascade
+On Delete Set NULL
+
+Foreign Key: Defines the column in the child table at the table constraint level
+
+References    Identifies the table and column in the parent table
+
+Reference key accepts NULL and duplicate values.
+
+
+On delete cascade  Deletes the dependent rows in the child table when a row in the parent table is deleted.
+
+On Delete Set NULL Converts dependent foreign key values to null.
+
+SQL>Create table department47473 (deptno number(3) primary key, dname varchar2(20) Not null);
+
+SQL>Create table employee47473(empno number(3) primary key, ename varchar2(10)
+Not null, salary number(7,2) check(salary > 0),  dno number(3) references department47473(deptno) on delete cascade);
+

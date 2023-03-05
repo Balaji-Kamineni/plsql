@@ -1,0 +1,445 @@
+Comparision Functions
+=====================
+1.NVL()
+=======
+
+NVL() function allows you to replace null with a more meaningful alternative in the results of a query.
+
+Syntax:
+NVL(e1, e2)
+
+The NVL() function accepts two arguments. If e1 evaluates to null, then NVL() function returns e2. If e1 evaluates to non-null, the NVL() function returns e1.
+
+NVL() and CASE expression
+
+The NVL() function is similar to the CASE expression when it comes to test a value for NULL .
+
+NVL (e1, e2)
+
+is equivalent to
+	
+CASE
+  WHEN e1 IS NOT NULL THEN e1
+ELSE
+  e2
+END
+
+2.NVL2()
+========
+NVL2() function is an extension of the NVL() function with different options based on whether a NULL value exists.
+
+The Oracle NVL2() function accepts three arguments. If the first argument is not null, then it returns the second argument. otherwise it returns the third argument.
+
+Syntax:
+NVL2(e1,e2,e3)
+
+3.NULLIF()
+==========
+NULLIF() function accepts two arguments. It returns a null value if the two arguments are equal. In case the arguments are not equal, the NULLIF() function returns the first argument.
+
+Syntax:
+NULLIF(e1, e2);
+
+4.COALESCE()
+============
+COALESCE() function accepts a list of arguments and returns the first one that evaluates to a non-null value.
+
+COALESCE(e1, e2, ..., en)
+
+SELECT
+  COALESCE(NULL,1) -- return 1
+FROM
+  dual;
+
+SELECT
+  COALESCE(NULL,NULL,NULL) -- return NULL
+FROM
+  dual; 
+
+SELECT
+  COALESCE(NULL,'A','B') result
+FROM
+  dual;
+
+SELECT
+  COALESCE(NULL,1,2) result
+FROM
+  dual; 
+
+SELECT
+  COALESCE(NULL,1,'A')
+FROM
+  dual;
+
+5.DECODE()
+==========
+DECODE() function allows you to add the procedural if-then-else logic to the query.
+
+SELECT DECODE(1, 1, 'One') FROM dual;
+
+SELECT DECODE(1, 2, 'One') FROM dual; 
+
+IF 1 = 2 THEN
+    RETURN 'One';
+ELSE
+    RETURN NULL;
+END IF;
+
+SELECT DECODE(1, 2, 'One','Not one') FROM dual; 
+IF 1 = 2 THEN
+    RETURN 'One';
+ELSE
+    RETURN 'Not one';
+END IF;
+
+
+SELECT DECODE(2, 1, 'One',  2, 'Two') FROM dual;
+
+IF 2 = 1 THEN 
+     RETURN 'One';
+ELSIF 2 = 2 THEN 
+    RETURN 'Two';
+END IF;
+
+
+SELECT DECODE(3, 1, 'One',  2, 'Two', 'Not one or two') FROM dual; 
+
+IF 3 = 1 THEN 
+     RETURN 'One';
+ELSIF 3 = 2 THEN 
+    RETURN 'Two';
+ELSE
+    RETURN 'Not one or two';
+END IF;
+
+
+NUMERIC FUNCTIONS
+=================
+
+1. ABS()
+ABS function returns the absolute value of a number.
+
+Syntax:
+ABS(number)
+
+2. SQRT()
+SQRT function returns the square root of a given number.
+
+Syntax:
+SQRT(number)
+
+3. POWER()
+POWER function returns m raised to the nth power.
+
+Syntax:
+POWER(m,n);
+
+4.TRUNC()
+TRUNC function returns a number truncated to a certain number of decimal places.
+
+Syntax:
+TRUNC(number,[,decimal places])
+
+5.SIGN()
+SIGN function returns a value indicating the sign of a number.
+
+Syntax:
+SIGN(number)
+
+6.REMAINDER()
+REMAINDER function returns the remainder of m divided by n.
+
+Syntax:
+REMAINER(m,n);
+
+7.MOD()
+MOD function returns the remainder of m divided by n.
+
+Syntax:
+MOD(m,n);
+
+8.FLOOR()
+FLOOR function returns the largest integer value that is equal to or less than a number.
+
+Syntax:
+FLOOR(number)
+
+9.CEIL(number)
+CEIL function returns the smallest integer value that is greater than or equal to a number.
+
+Syntax:
+CEIL(number)
+
+10.ROUND()
+ROUND function returns a number rounded to a certain number of decimal places.
+
+Syntax:
+ROUND( number [, decimal_places] )
+
+String/Character Functions
+==========================
+
+Oracle / PLSQL: CASE Statement
+==============================
+
+Description
+
+The Oracle/PLSQL CASE statement has the functionality of an IF-THEN-ELSE statement. Starting in Oracle 9i, you can use the CASE statement within a SQL statement.
+
+The syntax for the CASE statement in Oracle/PLSQL is:
+
+CASE [ expression ]
+
+   WHEN condition_1 THEN result_1
+   WHEN condition_2 THEN result_2
+   ...
+   WHEN condition_n THEN result_n
+
+   ELSE result
+
+END
+
+Parameters or Arguments
+
+expression:
+===========
+    Optional. It is the value that you are comparing to the list of conditions. (ie: condition_1, condition_2, ... condition_n)
+
+condition_1, condition_2, ... condition_n:
+==========================================
+    The conditions that must all be the same datatype. The conditions are evaluated in the order listed. Once a condition is found to be true, the CASE statement will return the result and not evaluate the conditions any further.
+
+result_1, result_2, ... result_n:
+=================================
+    Results that must all be the same datatype. This is the value returned once a condition is found to be true. 
+
+
+Returns
+
+The CASE statement returns any datatype such as a string, numeric, date, etc. (BUT all results must be the same datatype in the CASE statement.)
+If all conditions are not the same datatype, an ORA-00932 error will be returned.
+If all results are not the same datatype, an ORA-00932 error will be returned.
+If no condition is found to be true, then the CASE statement will return the value in the ELSE clause.
+If the ELSE clause is omitted and no condition is found to be true, then the CASE statement will return NULL.
+Note
+
+    You can have up to 255 comparisons in a CASE statement. Each WHEN ... THEN clause is considered 2 comparisons.
+
+
+Example
+
+The CASE statement can be used in Oracle/PLSQL.
+
+You could use the CASE statement in a SQL statement as follows: (includes the expression clause)
+
+SELECT table_name,
+CASE owner
+  WHEN 'SYS' THEN 'The owner is SYS'
+  WHEN 'SYSTEM' THEN 'The owner is SYSTEM'
+  ELSE 'The owner is another value'
+END
+FROM all_tables;
+
+Or you could write the SQL statement using the CASE statement like this: (omits the expression clause)
+
+SELECT table_name,
+CASE
+  WHEN owner='SYS' THEN 'The owner is SYS'
+  WHEN owner='SYSTEM' THEN 'The owner is SYSTEM'
+  ELSE 'The owner is another value'
+END
+FROM all_tables;
+
+The above two CASE statements are equivalent to the following IF-THEN-ELSE statement:
+
+IF owner = 'SYS' THEN
+   result := 'The owner is SYS';
+
+ELSIF owner = 'SYSTEM' THEN
+   result := 'The owner is SYSTEM'';
+
+ELSE
+   result := 'The owner is another value';
+
+END IF;
+
+The CASE statement will compare each owner value, one by one.
+
+One thing to note is that the ELSE clause within the CASE statement is optional. You could have omitted it. Let's look at the SQL statement above with the ELSE clause omitted.
+
+Your SQL statement would look as follows:
+
+SELECT table_name,
+CASE owner
+  WHEN 'SYS' THEN 'The owner is SYS'
+  WHEN 'SYSTEM' THEN 'The owner is SYSTEM'
+END
+FROM all_tables;
+
+With the ELSE clause omitted, if no condition was found to be true, the CASE statement would return NULL.
+Comparing 2 Conditions
+
+Here is an example that demonstrates how to use the CASE statement to compare different conditions:
+
+SELECT
+CASE
+  WHEN a < b THEN 'hello'
+  WHEN d < e THEN 'goodbye'
+END
+FROM suppliers;
+
+SELECT supplier_id,
+CASE
+  WHEN supplier_name = 'IBM' and supplier_type = 'Hardware' THEN 'North office'
+  WHEN supplier_name = 'IBM' and supplier_type = 'Software' THEN 'South office'
+END
+FROM suppliers;
+
+=========================================
+How to Delete Duplicate Records in Oracle
+=========================================
+
+Once you’ve found the duplicate records in a table, you often want to delete the unwanted copies to keep your data clean.
+
+If a table has a few duplicate rows, you could do this manually one by one by using a simple DELETE statement. However, it is time-consuming to do it manually if the table has a large number of duplicate records. It is better to construct a single statement that removes all unwanted copies in one go.
+
+Before removing the duplicate records, you must decide which instances you want to keep. For example, you may want to preserve the newest or oldest row. In this case, you need a column in the table like id column that is not the part of the group used to evaluate duplicate.
+
+Consider the following fruits table:
+
+CREATE TABLE fruits (
+        fruit_id   NUMBER generated BY DEFAULT AS IDENTITY,
+        fruit_name VARCHAR2(100),
+        color VARCHAR2(20),
+        PRIMARY KEY (fruit_id)
+);
+
+-- insert sample rows
+INSERT INTO fruits(fruit_name,color) VALUES('Apple','Red');
+INSERT INTO fruits(fruit_name,color) VALUES('Apple','Red');
+INSERT INTO fruits(fruit_name,color) VALUES('Orange','Orange');
+INSERT INTO fruits(fruit_name,color) VALUES('Orange','Orange');
+INSERT INTO fruits(fruit_name,color) VALUES('Orange','Orange');
+INSERT INTO fruits(fruit_name,color) VALUES('Banana','Yellow');
+INSERT INTO fruits(fruit_name,color) VALUES('Banana','Green');
+
+-- query data from the fruit table
+SELECT * FROM fruits; 
+
+Suppose you want to keep the row with the highest fruit_id and delete all other copies. The following query returns the last entry for each combination of fruit_name and color:
+
+SELECT
+  MAX(fruit_id)
+FROM
+  fruits
+GROUP BY
+  fruit_name,
+  color
+ORDER BY
+  MAX(fruit_id);
+
+You use the following DELETE statement with a subquery to delete rows whose values in the fruit_id column are not the highest ones.
+
+DELETE FROM
+  fruits
+WHERE
+  fruit_id NOT IN
+  (
+    SELECT
+      MAX(fruit_id)
+    FROM
+      fruits
+    GROUP BY
+      fruit_name,
+      color
+  );
+
+
+Likewise, if you want to keep the row with the lowest id, you use the MIN() function instead of the MAX() function:
+
+DELETE FROM
+  fruits
+WHERE
+  fruit_id NOT IN
+  (
+    SELECT
+      MIN(fruit_id)
+    FROM
+      fruits
+    GROUP BY
+      fruit_name,
+      color
+  );
+
+
+This method above works if you have a column that is not part of the group for evaluating duplicate. If all values in all columns can have copies, then you cannot use the fruit_id column anymore.
+
+Let’s drop and create the fruits table with a new structure and data as follows:
+
+DROP TABLE fruits;
+
+CREATE TABLE fruits (
+        fruit_id   NUMBER,
+        fruit_name VARCHAR2(100),
+        color VARCHAR2(20)
+);
+INSERT INTO fruits(fruit_id,fruit_name,color) VALUES(1,'Apple','Red');
+INSERT INTO fruits(fruit_id,fruit_name,color) VALUES(1,'Apple','Red');
+INSERT INTO fruits(fruit_id,fruit_name,color) VALUES(2,'Orange','Orange');
+INSERT INTO fruits(fruit_id,fruit_name,color) VALUES(2,'Orange','Orange');
+INSERT INTO fruits(fruit_id,fruit_name,color) VALUES(2,'Orange','Orange');
+INSERT INTO fruits(fruit_id,fruit_name,color) VALUES(3,'Banana','Yellow');
+INSERT INTO fruits(fruit_id,fruit_name,color) VALUES('4,Banana','Green');
+
+SELECT * FROM fruits;
+In the fruits table, the values in all columns fruit_id, fruit_name, and color have copies.
+
+In this case, you can use the rowid which is a physical locator that specifies where on storage Oracle stores the row. Because the rowid is unique to each row, you can use it to remove the duplicates as shown below:
+
+DELETE
+FROM
+  fruits
+WHERE
+  rowid NOT IN
+  (
+    SELECT
+      MIN(rowid)
+    FROM
+      fruits
+    GROUP BY
+      fruit_id,
+      fruit_name,
+      color
+  );
+
+
+The following query verifies the delete operation:
+
+SELECT
+  *
+FROM
+  fruits;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

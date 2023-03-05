@@ -1,0 +1,598 @@
+PL / SQL
+--------
+PL / SQL  :  Procedural Language / SQL
+
+Supports all the features of SQL along with procedural language features.
+
+PL / SQL allows to use all SQL's dml,ddl,dcl,tcl,sql functions,operators with higher better performance.
+
+PL/SQL allows sending an entire block of statements to the database at one time. This reduces network traffic and provides high performance for the applications. PL/SQL gives high productivity to programmers as it can query, transform, and update data in a database.
+
+PL/SQL offers the following advantages:
+=======================================
+
+    Reduces network traffic: This one is great advantages of PL/SQL. Because PL/SQL nature is entire block of SQL statements execute into oracle engine all at once so it's main benefit is reducing the network traffic.
+
+    Procedural language support: PL/SQL is a development tools not only for data manipulation features but also provide the conditional checking, looping or branching operations same as like other programming language.
+
+    Error handling PL/SQL is dealing with error handling, It's permits the smart way handling the errors and giving user friendly error messages, when the errors are encountered.
+
+    Declare variable PL/SQL gives you control to declare variables and access them within the block. The declared variables can be used at the time of query processing.
+
+    Intermediate Calculation Calculations in PL/SQL done quickly and efficiently without using Oracle engines. This improves the transaction performance.
+
+    Portable application Applications are written in PL/SQL are portable in any Operating system. PL/SQL applications are independence program to run any computer.
+
+Following are few more PL/SQL advantages:
+
+    PL/SQL is a very secure functionality tool for manipulating, controlling, validating, a nd restricting unauthorized access data from the SQL database.
+
+    Using PL/SQL we can improve application performance. It also allows to deal with errors so we can provide user friendly error messages.
+
+    PL/SQL have a great functionality to display multiple records from the multiple tables at the same time.
+
+    PL/SQL is capable to send entire block of statements and execute it in the Oracle engine at once.
+
+Blocks are of two types:
+=> Anonymous block
+=> Named block [Procedures, Functions, Triggers]
+
+-> Structure of  PL / SQL program/Block
+=======================================
+declare[optional]
+   <declaration part>
+begin[mandatory]
+   <execution statements>
+   exception[optional]
+      <exception handling mechanisms>
+end;[mandatory]
+
+
+PL/SQL Variables
+
+PL/SQL variable is a relevant name which provide a storage capability during the execution of code. Every PL/SQL variables has a specific data type which defines the size and physical location of the variable memory. Moreover you can specifies initial value of the variable at the time of variable declaration.
+
+You must have to declare the PL/SQL variable in the declaration section. And variable name should not more than 31 characters. Variable name must be begin with ASCII letter. It can be either in uppercase or lowercase.
+
+Followed by the first character are numerals, underscore, and dollar sign characters allowed.
+
+PL/SQL is case-insensitive. It means variable name Length and length refer as the same variable.
+
+Syntax for declaring variable
+
+The general syntax to declaring variable:
+
+variable_name Datatype[Size] [NOT NULL] := [ value ]; 
+
+Explanation
+
+    variable_name is the predefined name of the variable.
+    Data type is a valid PL/SQL data type.
+    Size is an optional specification of data type size to hold the maximum size value.
+    NOT NULL is an optional specification of the variable value can't be accept NULL.
+    value is also an optional specification, where you can initialize the initial value of variable.
+    Each variable declaration is terminated by a semicolon.
+Example of Variable Declaration
+
+In this example variable defining employee number (eno) is NOT NULL(compulsory), employee name and initializing initial value to a variable,
+
+Example
+
+DECLARE
+    eno number(5) NOT NULL := 2 -- NOT NULL (value can't be blank), Assign initial value
+    ename varchar2(15) := 'Branson Devs'; -- intialize value at the time of declaration
+BEGIN
+    dbms_output.put_line('Declared Value:');
+    dbms_output.put_line(' Employee Number: ' || eno || ' Employee Name: ' || ename);
+END;
+/
+
+Variables Scope
+
+PL/SQL variable scope is identified the region range which you can reference the variable. PL/SQL have two type scopes local scope and global scope,
+
+Local variables - Variables declared in inner block and can't be referenced by the outside blocks.
+Global variables - Where as variables declared in a outer block and can be referencing by itself in inner blocks.
+Variable Scope Example
+
+In this example declaration two variables (num1 and num2) are in the outer block (Global variable) and another one third variable declared (num_addition) into the inner block (local variable). Variable 'num_addition' declared inner block so can't access in the outer block. But num1 and num2 can be accessed anywhere in the block.
+
+DECLARE
+    num1 number := 10;
+    num2 number := 20;
+BEGIN
+    DECLARE 
+        num_addition number; 
+    BEGIN 
+        num_addition := num1 + num2; 
+        dbms_output.put_line('Addition is: ' || num_addition);
+    END;  -- End of access num_addition variable
+END;
+/
+
+PL/SQL Constants
+
+You can declare PL/SQL constants along with the value and can not change them throughout the program block. The constants declaration functionality is available in almost all programming languages.
+
+Constant Syntax
+
+The general syntax for declaring a constant variable is:
+
+Constant_name CONSTANT Datatype[Size] := Value; 
+
+Explanation
+
+    Constant_name is a predefined name of the constant (similar to a variable name).
+    CONSTANT is a reserved keyword.
+    Data type is a valid PL/SQL data type.
+    Size is an optional specification of data type. It holds maximum capacity value for the particular variable.
+    Value must be assigned to a constant when it is declared. You can not assign or change it later.
+    Each constant declaration is terminated by a semicolon.
+
+Constant Example
+
+In this example, we will store the employee number which is NOT NULL (compulsory), employee Name and employee department which is constant,
+
+Example
+
+DECLARE
+    eno number(5) NOT NULL := 2
+    ename varchar2(15) := 'Branson Devs';
+    edept CONSTANT varchar2(15) := 'Web Developer';
+BEGIN
+    dbms_output.put_line('Declared Value:');
+    dbms_output.put_line(' Employee number: ' || eno || ' Employee Name: ' || ename);
+    dbms_output.put_line('Constant Declared:');
+    dbms_output.put_line(' Employee Department: ' || edept);    
+END;
+/
+
+Backward slash '/' is indicated to execute the above PL/SQL Block Program.
+
+Variable/Constant Declarations Example
+
+In this example, we will store the pi which is constant real number, radius and area which are real number,
+
+Example
+
+DECLARE
+    pi CONSTANT REAL := 3.14159;
+    radius REAL := 3;
+    area REAL := (pi * radius**2);
+BEGIN
+    dbms_output.put_line(' PI: ' || pi || ' Radius: ' || radius);
+    dbms_output.put_line(' Area: ' || area);    
+END;
+/
+
+PL/SQL SET Serveroutput ON
+
+Whenever you start Oracle SQL (PL/SQL) at that time you must have to write the "SET Serveroutput ON" command.
+
+PL/SQL program execution into Oracle engine so we always required to get serveroutput result and display into the screen otherwise result can't be display.
+Set PL/SQL serveroutput Result ON
+
+SQL> set serveroutput on 
+
+Set serveroutput on Example
+
+In this example showing you how to turn on serveroutput result, Here first line turn on serveroutput. After define variables and constants to print defined variable value using dbms_output.put_line command.
+
+Example
+
+SQL> set serveroutput on
+SQL> DECLARE
+    eno number(5) NOT NULL := 2
+    ename varchar2(15) := 'Branson Devs';
+    edept CONSTANT varchar2(15) := 'Web Developer';
+BEGIN
+    dbms_output.put_line('Declared Value:');
+    dbms_output.put_line(' Employee Number: ' || eno || ' Employee Name: ' || ename);
+    dbms_output.put_line('Constant Declared:');
+    dbms_output.put_line(' Employee Department: ' || edept);
+END;
+/
+PL/SQL Comment>
+
+PL/SQL Comments you can write single line comments or either multiple line comments,
+
+    Multi-line comments and
+    Single line comments
+
+Multi-line comments are delimited with /*..COMMENT TEXT..*/ and
+Single-line comments starts with two dashes --.
+
+PL/SQL Comments can begin in any column on any line. If you are embedding comments in SQL that will be embedded in PL/SQL you need to be careful for writing a column.
+Comment Syntax
+
+SQL>-- Single Line Comment
+SQL>/*  Multiline Comment line 1
+        Multiline Comment line2    */ 
+Comment Example
+
+This example is nothing any new same as last lesson only new for showing a how to write single line comment or multi line comment in PL/SQL program,
+
+Example
+
+SQL> set serveroutput on
+SQL> DECLARE
+    
+    eno number(5) NOT NULL := 2; --assign value into eno variable
+    
+    ename varchar2(15) := 'Branson Devs';
+    
+    /* Constant value is fixed for edept value is "Web Deloper" 
+    is fixed all program not required declare all times. */
+    edept CONSTANT varchar2(15) := 'Web Developer';
+BEGIN
+    dbms_output.put_line('Declared Value:');
+    dbms_output.put_line(' Employee Number: ' || eno || ' Employee Name: ' || ename);
+    dbms_output.put_line('Constant Declared:');
+    dbms_output.put_line(' Employee Department: ' || edept);
+END;
+/
+
+
+
+
+
+
+-->  To print the message on screen
+dbms_output.put_line(' This is a table' );
+
+SQL> set serveroutput on;    // to give output for program
+
+Write a Pl / Sql Block to print statement on Sql prompt.
+-------------------------------------------------------
+SQL>  	begin
+	dbms_output.put_line(' This is a table' );
+	end;
+	
+PL / SQL  procedure successfully executed
+
+
+-> to assign values
+a constant Number(3,2) := 2.12;
+Name varchar2(15) := 'Azam';
+
+Pl-Sql block to find date
+--------------------------
+DECLARE
+v_day VARCHAR2(20);
+BEGIN
+v_day := TO_CHAR(SYSDATE, 'Day');
+DBMS_OUTPUT.PUT_LINE ('Today is '||v_day);
+END;
+/
+
+
+Pl-Sql block to insert values into table
+----------------------------------------
+Create table zipcode
+(ZIP number(4),
+CREATED_BY varchar2(20),
+CREATED_DATE date,
+ MODIFIED_BY varchar2(10),
+MODIFIED_DATE date
+);
+
+Then insert values into table as
+DECLARE
+v_zip zipcode.zip%TYPE;
+v_user zipcode.created_by%TYPE;
+v_date zipcode.created_date%TYPE;
+BEGIN
+SELECT 43438, USER, SYSDATE
+INTO v_zip, v_user, v_date
+FROM dual;
+INSERT INTO zipcode
+(ZIP, CREATED_BY ,CREATED_DATE, MODIFIED_BY,
+MODIFIED_DATE
+)
+VALUES(v_zip, v_user, v_date, v_user, v_date);
+END;
+
+
+Pl-Sql block to update two records :
+------------------------------------
+BEGIN
+-- STEP 1
+UPDATE emp
+SET comm = comm - (comm * 0.10)
+WHERE comm IS NULL;
+-- STEP 2
+UPDATE emp
+SET comm = comm + (comm * 0.10)
+WHERE comm IS NOT NULL;
+END;
+
+sql> select * from emp;
+
+
+Pl-Sql block to find the area of circle :--
+-----------------------------------------
+declare
+pi constant Number(7,2) := 3.14;
+r number(2) := 2;
+Area real;
+begin
+Area := pi * r * r;
+dbms_output.put_line('area of circle is ' || area);
+end;
+/
+
+Pl/Sql block to perform addition of two numbers by taking input.
+-------------------------------------------------------
+declare
+k number;
+a number:=&a;
+b number:=&b;
+begin
+k:=a+b;
+dbms_output.put_line('Sum of the two numbers is : ' || k);
+end;
+
+/
+
+Control Structures : 
+i)  Conditional Statement/Selection Statement
+ii) Iterative Statement (Loop)
+
+conditional statement
+---------------------
+1) if then
+2) if then else
+3) if then elsif
+
+syntax:
+if  <condition> then 				
+    <set of statements>;				
+end if;						
+
+syntax:
+if  <condition> then
+    <set of statements>;
+else
+    <set of statements>;
+end if;
+
+syntax:
+if <condition1> then
+   <set of statements>;
+elsif <condition2> then
+   <set of statements>;
+elsif <condition3> then
+   <set of statements>
+else
+   <set of statements>
+end if;
+
+syntax:
+if<condition1> then
+  if<condition2> then
+     if<condition3> then
+        statement1;
+     else
+        statement2;
+     end if;
+  else
+     statement3;
+  end if;
+else
+  statement4;
+end if;
+
+     
+
+Pl-Sql block to find the larger number among three number :
+-------------------------------------------------------
+declare
+big number;
+a number := &a;
+b number := &b;
+c number := &c;
+begin
+if  a> b then big :=a;
+else  big :=b;
+end if;
+if c > big then big := c;
+end if;
+dbms_output.put_line('the biggest number is'|| big);
+end;
+
+Iterative control statements:
+-----------------------------
+Loop: Executing a statement or a group of statements repeatedly for a given period of time or
+until certain condition satisfied are called as a LOOP.
+
+Loop can be constructed using :
+1) simple loop
+2) while loop
+3) for loop
+
+-----------------
+1)  simple loop :
+-----------------
+syntax:
+
+LOOP
+   statement1;
+   statement2;
+   EXIT WHEN <Condition>;
+END LOOP;
+
+
+ DECLARE
+  2     v_n     NUMBER;
+  3     v_i     NUMBER:=1;
+  4     v_sum   NUMBER:=0;
+  5  BEGIN
+  6     LOOP
+  7        IF v_n MOD v_i = 0 THEN
+  8             v_sum:=v_sum+v_i;
+  9        END IF;
+ 10        v_i:=v_i+1;
+ 11        EXIT WHEN v_i = v_n;
+ 12      END LOOP;
+ 13      IF v_sum=v_n THEN
+ 14         DBMS_OUTPUT.PUT_LINE(v_n|| ' is a perfect number');
+ 15      ELSE
+ 16         DBMS_OUTPUT.PUT_LINE(v_n|| ' is not a perfect number');
+ 17     END IF;
+ 18  END;
+ 19  /
+
+
+Example of simple loop:
+----------------------
+SQL> 
+declare
+a number := 100;
+begin
+loop
+  a := a+25;
+  exit when a=250;
+end loop;
+dbms_output.put_line(a);
+end;
+/
+------------
+while loop :
+------------
+syntax:
+WHILE <condition>
+LOOP
+   <sequence of statements>;
+END LOOP;
+
+Ex: To find the sum of   "n"    number using while loop
+==============================================
+SQL> declare
+sum1 number;
+i number;
+begin
+sum1 :=0;
+i :=1;
+while  i<=10
+loop
+sum1 := sum1+i;
+i := i+ 1;
+end loop;
+dbms_output.put_line(sum1);
+end;
+/
+-------------------------------------------------------------
+Pl / Sql block to print characters as shown below
++
+++
++++
+++++
++++++
+-----------------------------------------------
+declare
+a varchar2(20);
+x varchar2(20);
+i number:=1;
+begin
+	a:='*';
+	while i<=5
+	loop
+		a:=x;
+		select concat(a,'+') into x from dual;
+		dbms_output.put_line(x);
+		i:=i+1;
+	end loop;
+end;
+/
+---------
+for loop:
+---------
+syntax:  
+for  variable in [reverse]  lowerbound..upperbound
+loop
+<sequence of statements>;
+end loop;
+
+Example to print numbers from 1 to 10 using for loop.
+------------------------------------------------------------------
+declare
+i number:=1;
+begin
+for i in 1..10
+loop
+  dbms_output.put_line('The values of i are :' || i);
+end loop;
+end;
+
+write a PL/SQL block to insert values into a table.
+=======================================
+declare
+id number;
+name varchar2(12);
+begin
+for i in 1..5
+loop
+id :=&id;
+name := '&name';
+insert into student values(id, name);
+end loop;
+end;
+
+PL/SQL block to reverse the given string
+-------------------------------------------------------------
+
+DECLARE
+  v_givenString VARCHAR2(20) := '&v_givenString';
+  v_revString   VARCHAR2(20);
+  v_length      NUMBER := length(v_givenString);
+BEGIN
+  FOR  v_index IN REVERSE 1..v_length
+  LOOP
+   v_revString :=  v_revString||SUBSTR(v_givenString,v_index,1);
+  END LOOP;
+  DBMS_OUTPUT.PUT_LINE('Given String ' || v_givenString);
+  DBMS_OUTPUT.PUT_LINE('Reverse String ' || v_revString);
+END;
+
+
+PL/SQL block to find prime numbers between 1 to 100
+---------------------------------------------------------------------------------
+declare
+n number := 1;
+i number;
+s number;
+begin
+while n < 100
+loop
+s:=0;
+for i in 1..n
+loop
+if mod(n,i)=0 then 
+s:=s+1;
+end if;
+end loop;
+if   s=2   then
+dbms_output.put_line('Prime Numbers between 1 to 100 are : 
+' || n);
+end if;
+n:=n+1;
+end loop;
+end;
+
+Create the PL/SQL block to to test whether the date provided by the user falls on the weekend (in other words, if the day is Saturday or Sunday)
+-----------------------------------------------------
+
+DECLARE
+v_date DATE := TO_DATE('&sv_user_date', 'DD-MON-YYYY');
+v_day VARCHAR2(15);
+BEGIN
+v_day := RTRIM(TO_CHAR(v_date, 'DAY'));
+IF v_day IN ('SATURDAY', 'SUNDAY') THEN
+DBMS_OUTPUT.PUT_LINE (v_date||' falls on weekend');
+ELSE
+DBMS_OUTPUT.PUT_LINE
+(v_date||' does not fall on the weekend');
+END IF;
+--- control resumes here
+DBMS_OUTPUT.PUT_LINE ('Done...');
+END;

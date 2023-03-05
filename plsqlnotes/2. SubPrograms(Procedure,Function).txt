@@ -1,0 +1,385 @@
+SUB PROGRAMS :
+--------------
+Subprograms are named PL/SQL blocks that can accept parameter and can be called when ever required.
+These are the reusable components.
+Sub program can have declarative part, executable part and exception handling part.
+
+Advantages:
+-----------------
+1) modularity
+sub programs allows to break program into well manageable modules.
+
+2) reusability
+sub programs once executed can be used in any no of applications
+
+3) precompiled object
+
+PL/SQL  supports two types of sub programs:
+
+1) PROCEDURES
+2) FUNCTIONS
+
+PROCEDURES:
+-----------
+           Procedures are stored blocks of code that have to be called in order to operate on the data.
+
+A procedure may or maynot return a value. If required it is capable of returning any no of values.
+
+syntax:
+CREATE OR REPLACE PROCEDURE <proc-name>
+IS|AS
+  <variable declaration>;
+  <cursor declaration>;
+BEGIN[mandatory]
+   <executable statements>;
+   EXCEPTION[optional]   
+     WHEN exc1 THEN statement1;
+     WHEN exc2 THEN statement2;
+     WHEN others THEN statementn;
+END;[mandatory]
+
+CREATE OR REPLACE PROCEDURE authenticateUser(
+ p_username tblUser.UserName%TYPE
+,p_password tblUser.Password%TYPE)
+IS
+    v_username tblUser.UserName%TYPE;
+BEGIN
+	SELECT UserName INTO v_username FROM tblUser WHERE UserName=p_username AND Password=p_password;  
+--RAISE NO_DATA_FOUND;
+  IF SQL%FOUND THEN
+     DBMS_OUTPUT.PUT_LINE('Login Successful');      
+  END IF;
+  EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+      DBMS_OUTPUT.PUT_LINE('Invalid Credentials.');
+END;
+
+
+EXEUCTE authenticateUser('sunil','sunil');
+
+=================================
+ CREATE OR REPLACE PROCEDURE registerUser(
+    p_userName IN tblUser.UserName%TYPE
+    ,p_Password IN tblUser.Password%TYPE
+    ,p_EmailId IN tblUser.EmailId%TYPE
+    ,p_MobileNo IN tblUser.MobileNo%TYPE
+    ,p_City IN tblUser.City%TYPE)
+    IS
+
+    BEGIN
+      INSERT INTO tblUser VALUES   (p_userName,p_password,p_EmailId,p_MobileNo,p_City);
+      IF SQL%ROWCOUNT >= 1 THEN
+         DBMS_OUTPUT.PUT_LINE('Registration done successfully');
+     else
+        DBMS_OUTPUT.PUT_LINE('Registration failed');
+     END IF;
+   END;
+===================================================
+
+CREATE OR REPLACE PROCEDURE getDetails(
+     p_EmpNo    IN   Emp.EmpNo%TYPE
+    ,p_EmpName  OUT Emp.EName%TYPE
+    ,p_EmpSal   OUT Emp.Sal%TYPE
+    ,p_EmpDesg  OUT Emp.Job%TYPE
+    )
+    IS
+    BEGIN
+       SELECT Ename,Sal,Job INTO p_EmpName,p_EmpSal,p_EmpDesg FROM Emp WHERE EmpNo=p_EmpNo;
+    END;
+
+To execute
+==========
+VARIABLE v_empname VARCHAR2(10);
+VARIABLE v_sal  NUMBER;
+VARIABLE v_desg VARCHAR2(10);
+
+PRINT v_empname  
+PRINT v_sal  
+PRINT v_desg
+
+
+EXECUTE getDetails(7369, :v_empname,:v_sal,:v_desg);
+
+PRINT v_empname  
+PRINT v_sal  
+PRINT v_desg
+============================================
+
+
+==========================================
+Calling a procedure from another procedure
+===========================================
+called procedure
+=================
+CREATE OR REPLACE PROCEDURE raise_salary(p_empno  IN emp.empno%type)
+    IS
+       v_sal  emp.sal%type;
+    BEGIN
+       SELECT sal INTO v_sal FROM emp WHERE empno=p_empno;
+       IF v_sal >= 1500 THEN
+          UPDATE emp SET sal=sal*1.1 WHERE empno=p_empno;
+	  DBMS_OUTPUT.PUT_LINE('Salary incremented for : '||p_empNo);
+          COMMIT;
+       END IF;
+  END;
+
+calling procedure
+=================
+CREATE OR REPLACE PROCEDURE getAllEmployeeIDs
+    IS
+       CURSOR  emp_cursor IS SELECT empno FROM emp;
+       v_empno  emp.empno%type;
+    BEGIN
+       OPEN emp_cursor;
+       LOOP
+           FETCH emp_cursor INTO v_empno;
+           IF emp_cursor%NOTFOUND THEN
+            EXIT;
+           END IF;
+          raise_salary(v_empno);
+      END LOOP;
+      CLOSE emp_cursor;
+  END;
+=========================
+CREATE OR REPLACE PROCEDURE getAllEmployeeIDs
+IS       
+    BEGIN          
+       FOR v_emp IN (SELECT empno FROM emp)           
+       LOOP
+          raise_salary(v_emp.empno);
+       END LOOP;      
+END;
+
+
+Pl / Sql procedure to print fibonacci series for a given number.
+
+-----------------------------------------------------------------------------------
+
+0   1   1   2    3   5   8  13  21  34
+n1  n2  n3
+    n1  n2  n3
+        n1  n2  n3
+create or replace procedure fib_proc( n number)
+is
+f number;
+f0 number:=0;
+f1 number:=1;
+i number:=1;
+begin
+ while(i<=n)
+loop
+dbms_output.put_line(f0);
+f:=f0+f1;
+f0:=f1;
+f1:=f;
+i:=i+1;
+end loop;
+end;
+/
+
+SQL> exec fib_proc(9);
+
+0  1  1  2  3  5  8  13  21  34 .....
+
+Procedure with IN OUT Parameter
+===============================
+CREATE OR REPLACE PROCEDURE FormatPhoneNo(PhoneNo IN OUT VARCHAR2)
+IS
+BEGIN
+        PhoneNo := '('||SUBSTR(PhoneNo,1,3)||')('||SUBSTR(PhoneNo,4,3)||')-'||SUBSTR(PhoneNo,7);	
+END;
+
+To execute the above Procedure
+==============================
+VARIABLE PhoneNo VARCHAR2(15);
+BEGIN
+  :PhoneNo := '9878675656';
+END;
+/
+PRINT PhoneNo;
+EXECUTE FormatPhoneNo(:PhoneNo);
+PRINT PhoneNo;
+
+(123)(456)-7890
+
+Procedure with Default parameters
+=================================
+ CREATE OR REPLACE PROCEDURE AddProduct(
+        p_productid     IN NUMBER DEFAULT 111
+        ,p_productname  IN Product.ProductName%TYPE DEFAULT 'Toy'
+        ,p_unitprice    IN Product.UnitPrice%TYPE DEFAULT 100)
+        IS
+        BEGIN
+         INSERT INTO Product VALUES(p_productid,p_productname,p_unitprice);
+         COMMIT;
+       END;
+
+To call the above procedure
+===========================
+BEGIN
+    AddProduct;
+    AddProduct(222);
+    AddProduct(333,'Ball');
+    AddProduct(444,'Bell',50);
+END;
+
+
+Calling the procedure with Positional, Named and Combination of Positional and Named way
+===============================================================
+
+EXECUTE AddProduct(101,'Monitor',3000);
+EXECUTE AddProduct(102,'Keyboard',300);
+
+EXECUTE AddProduct(p_productid=>103,p_productname=>'Mouse',p_unitprice=>400);
+
+EXECUTE AddProduct(p_productname=>'Pencil',p_unitprice=>400,p_productid=>104);
+
+EXECUTE AddProduct(105,p_unitprice=>10,p_productname=>'Pen');
+
+EXECUTE AddProduct(p_unitprice=>10,p_productname=>'Pen',105);
+
+
+Creating/calling a procedure within Procedure
+=============================================
+
+CREATE OR REPLACE PROCEDURE logdetails(p_username VARCHAR2, p_logdate DATE)
+       IS
+       BEGIN
+           INSERT INTO logtable VALUES(p_username,p_logdate);
+       END;
+
+=====================================================================================
+CREATE OR REPLACE PROCEDURE removeProduct(p_productid  IN Product.productId%TYPE)
+    IS
+	PROCEDURE logdetails(p_username VARCHAR2, p_logdate DATE,p_productid NUMBER(3))
+        IS
+        BEGIN
+            INSERT INTO logtable VALUES(p_username,p_logdate,p_productid);
+        END;       
+   BEGIN
+       DELETE FROM Product WHERE ProductId=p_productid;
+       COMMIT;
+       logdetails(USER,SYSDATE,p_productId);
+   END;
+
+To execute
+=========
+EXECUTE removeProduct(444);
+
+Table Name: logtable(username, logdate)          
+
+
+Functions :
+===========
+A Function must return a value. Functions are mainly used for calculation purpose.
+
+A function is a named block, which can be used as a reusable component. It is generally used for calculation. It must return a single value.
+
+syntax:
+CREATE OR REPLACE FUNCTION <function-name>[arguement]   
+RETURN <DATATYPE>
+IS|AS 
+   <local declaration>;
+BEGIN
+   <executable statements>;
+END;
+-----------------------------------------------
+The difference between the function and procedure is :
+Function returns a value but a procedure may or may not return a value.
+
+Pl / Sql Function to find the sum of two numbers.
+-----------------------------------------------------------------
+SQL>
+CREATE OR REPLACE FUNCTION addition(num1 IN NUMBER, num2 IN NUMBER) RETURN NUMBER
+IS
+  v_result NUMBER;
+BEGIN
+  v_result:=num1+num2;
+  RETURN v_result;
+END;
+	
+to call the function
+SQL>select addition(10, 23) from dual;
+
+Pl / Sql Function to find the factorial of a given number
+-------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION FACT(n NUMBER) RETURN NUMBER 
+AS
+	f number := 1;
+	i number;
+BEGIN
+	if n < 0 then
+		return -1;
+	end if;
+	for i in 1..n
+	loop
+		f := f * i;
+	end loop;
+	return f;
+end;
+/
+
+SQL>select fact(9) from dual;
+-------------------------------------
+
+cc
+CREATE OR REPLACE FUNCTION totalSalary(p_value1 NUMBER, p_value2 NUMBER)
+  2  RETURN NUMBER
+  3  IS
+  4     v_value3 NUMBER;
+  5  BEGIN
+  6     v_value3 := p_value1+p_value2;
+  7     RETURN v_value3;
+  8  END;
+  9  /
+
+Function created.
+
+SELECT totalSalary(5000,2000) FROM DUAL;
+SELECT empno,ename, totalSalary(emp.sal,emp.comm) FROM Emp;
+SELECT empno,ename,totalsalary(emp.sal,NVL(emp.comm,0)) FROM Emp;
+
+
+CREATE OR REPLACE FUNCTION IsPrime(p_num  NUMBER) RETURN BOOLEAN
+IS
+        v_counter  NUMBER :=2;
+        v_flag     BOOLEAN := TRUE;
+BEGIN
+         --WHILE v_counter < p_num
+	 --WHILE v_counter <= TRUNC(p_num/2)
+	 WHILE v_counter <= TRUNC(SQRT(p_num))
+         LOOP
+           IF p_num MOD v_counter = 0  THEN
+                 v_flag := FALSE;
+                 RETURN v_flag;
+           END IF;
+           v_counter := v_counter+1;
+         END LOOP;
+         RETURN v_flag;
+END;
+
+
+
+DECLARE
+   v_fact  NUMBER;
+BEGIN
+   --during assignment
+   v_fact := factorial(5);
+   DBMS_OUTPUT.PUT_LINE('Factorial = ' || v_fact);
+
+   -- In select clause
+   SELECT factorial(4) INTO v_fact FROM DUAL;  
+   DBMS_OUTPUT.PUT_LINE('Factorial = ' || v_fact);
+
+   -- In expression
+   IF isPrime(&num) THEN
+      DBMS_OUTPUT.PUT_LINE('Prime number');
+   ELSE
+      DBMS_OUTPUT.PUT_LINE('Not a prime number');
+   END IF;
+END;
+
+
+
+/

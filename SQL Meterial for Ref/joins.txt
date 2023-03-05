@@ -1,0 +1,125 @@
+Cross Join
+==========
+
+SELECT alias1.col1, alias1.col2, alias1.col3, alias2.col1, alias2.col2 
+FROM <Table1> <Alias1>, <Table2> <Alias2>;
+
+SELECT alias1.col1, alias1.col2, alias1.col3, alias2.col1, alias2.col2 
+FROM <Table1> <Alias1> CROSS JOIN <Table2> <Alias2>;
+
+
+SELECT e.empno,e.ename,d.deptno,d.dname
+FROM Emp e, Dept d
+
+SELECT e.empno,e.ename,d.deptno,d.dname
+FROM Emp e CROSS JOIN Dept d
+
+====================
+Equi Join/Inner Join
+====================
+SELECT e.empno,e.ename,d.deptno,d.dname
+FROM Emp e, Dept d
+WHERE e.deptno=d.deptno
+
+SELECT e.empno,e.ename,d.deptno,d.dname
+FROM Emp e JOIN Dept d
+ON e.deptno=d.deptno
+
+SELECT e.empno,e.ename,d.deptno,d.dname
+FROM Emp e INNER JOIN Dept d
+ON e.deptno=d.deptno
+
+SELECT empNo,eName,deptNo,dname FROM EMP JOIN DEPT USING(Deptno)
+
+Emp
+===
+EmpId  EmpName  EmpSal	DeptNo
+
+Dept				
+====				
+DeptNo	DName	LocId			
+
+Location
+=========
+LocId	LocName
+
+
+SELECT e.empid,e.empname,e.empsal,d.deptno,d.dname,l.locid,l.locname
+FROM
+Emp e INNER JOIN Dept d ON e.deptno=d.deptno
+INNER JOIN Location l ON d.locid = l.locid;
+
+SELECT e.empid,e.empname,e.empsal,d.deptno,d.dname,l.locid,l.locname
+FROM
+Emp e,Dept d,Location l
+WHERE e.deptno=d.deptno AND d.locid = l.locid;
+
+
+
+SELF Join
+=========
+
+SELECT workers.Ename as Worker, workers.mgr as MID
+,managers.Ename as Manager, managers.empno AS EID
+FROM Emp workers, Emp managers
+WHERE workers.mgr = managers.empno
+
+
+SELECT workers.Ename as Worker, workers.mgr as MID
+,managers.Ename as Manager, managers.empno AS EID
+FROM Emp workers, Emp managers
+WHERE workers.mgr = managers.empno AND workers.Ename='SMITH'
+
+Left outer join
+===============
+It displays all the records from the left as well as matching rows from the right table.
+
+SELECT alias1.col1, alias1.col2, alias1.col3 , alias2.col1, alias2.col2
+FROM <Table1> alias1 , <Table2> alias2 WHERE alias1.col1=alias2.col1(+)
+
+
+SELECT e.empno, e.ename, e.sal,d.deptno,d.dname
+FROM Emp e,Dept d WHERE e.deptNo = d.deptNo(+)
+
+SELECT e.empno, e.ename, e.sal,d.deptno,d.dname
+FROM Emp e LEFT JOIN Dept d ON(e.deptNo = d.deptNo)
+
+SELECT e.empno, e.ename, e.sal,d.deptno,d.dname
+FROM Emp e LEFT OUTER JOIN Dept d ON(e.deptNo = d.deptNo)
+
+
+Right outer join
+================
+SELECT e.empno, e.ename, e.sal,d.deptno,d.dname
+FROM Emp e,Dept d WHERE e.deptNo(+) = d.deptNo
+
+SELECT e.empno, e.ename, e.sal,d.deptno,d.dname
+FROM Emp e RIGHT JOIN Dept d ON(e.deptNo = d.deptNo)
+
+SELECT e.empno, e.ename, e.sal,d.deptno,d.dname
+FROM Emp e RIGHT OUTER JOIN Dept d ON(e.deptNo = d.deptNo)
+
+
+Full outer join
+===============
+
+SELECT e.empno, e.ename, e.sal,d.deptno,d.dname
+FROM Emp e FULL OUTER JOIN Dept d ON(e.deptNo = d.deptNo)
+
+
+Non-equi Join
+=============
+SELECT e.empno,e.ename,d.grade
+FROM Emp e, SalGrade d
+WHERE e.sal BETWEEN d.lowsal AND d.hisal
+
+
+
+
+
+
+
+
+
+
+

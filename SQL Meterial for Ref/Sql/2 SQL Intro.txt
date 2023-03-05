@@ -1,0 +1,63 @@
+History of SQL:
+
+The history of SQL begins in an IBM laboratory in San Jose, California, where SQL was developed in the late 1970s. The initials stand for Structured Query Language, and the language itself is often referred to as "sequel." It was originally developed for IBM's DB2 product (a relational database management system, or RDBMS, that can still be bought today for various platforms and environments). In fact, SQL makes an RDBMS possible. SQL is a nonprocedural language, in contrast to the procedural or third generation languages (3GLs) such as COBOL and C that had been created up to that time.
+
+NOTE: Nonprocedural means what rather than how. For example, SQL describes what data to retrieve, delete, or insert, rather than how to perform the operation.
+
+Overview of SQL
+
+SQL is the standard language used to manipulate and retrieve data from these relational databases. SQL enables a programmer or database administrator to do the following:
+
+Modify a database's structure
+Change system security settings
+Add user permissions on databases or tables
+Query a database for information
+Update the contents of a database
+
+Structured Query Language
+
+Oracle server supports ANSI standard SQL and contains extensions. Using SQL, you can communicate with the Oracle server. SQL has the following advantages
+
+•	Efficient
+•	Easy to learn and use
+•	Functionally complete (With SQL, you can define, retrieve, and manipulate data in the tables.)
+
+SQL is used to query database for performing different types of operations such as
+
+There are different types of SQL queries that are categerized according to the usage of the queries:
+
+DDL(Data Definition Language):
+------------------------------------------
+It is used to create ,manage database objects in the database. 
+it is be used to define the database objects.
+database objects such as tables ,views ,sequences etc. can be created ,dropped altered using these queries.
+
+commands are :
+create, drop, truncate, alter.
+
+database objects are tables, indexes, views, sequences etc..
+
+(DML)Data Manipulation Language:
+--------------------------------------
+It is used to perform different operations on the database objects by querying the database.
+it is used to manipulate the database i.e.. retrieve data, insert data, update the current data and delete some records from the database.
+
+commands are :
+select, insert, update, delete.
+
+(DCL)Data Control Language :
+-------------------------------
+it is used to restrict or grant user from accessing the database objects of users .
+commands are :
+
+revoke ,grant.
+
+(TCL)Transaction Control Language:
+-------------------------------------
+this is used for maintaining the transaction that is performed by the user .
+a transaction is started by the user and completes when the system performs the requested action of the user.
+when ever a transaction is completed so the data has to saved or else it should not be saved. it is done using TCL.
+eg:ATM withdrawal.
+
+commands are:
+commit, savepoint, rollback.

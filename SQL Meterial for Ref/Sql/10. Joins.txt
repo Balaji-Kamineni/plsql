@@ -1,0 +1,130 @@
+JOINS
+=====
+
+Objectives
+Join will enable you to gather and manipulate data across several tables.
+
+One of the most powerful features of SQL is its capability to gather and manipulate data from across several tables. Without this feature you would have to store all the data elements necessary for each application in one table. Without common tables you would need to store the same data in several tables. 
+
+Joining tables using Oracle Syntax
+
+Use a join to query data from more than one table
+
+SELECT 	Table1.column1, table2.column2 
+FROM table1,table2 
+WHERE table1.column1 = table2.column2;
+
+• Write the join condition in the WHERE clause.
+• Prefix the column name with table name when the same column name   appears in more than one table.
+
+Guidelines
+-----------------
+• When writing a SELECT statement that joins tables, precede the common column name with the table name for clarify and to enhance database access.
+
+• If the same column name appears in more than one table, the column name must be prefixed with the table name.
+
+Equi join  :
+----------------
+Extracting the information from more than one table by comparing  ( = ) the common information.
+
+Note : Equi Joins are also called as simple joins or Inner Joins
+
+To display common column information
+SQL> SELECT EMPNO,ENAME,JOB,SAL,DNAME FROM EMP,DEPT
+          WHERE EMP.DEPTNO = DEPT.DEPTNO;
+ANALYSIS
+Efficiency is more when we compare the information from lower data table(master table) to Higher data table( child table).
+
+When Oracle processes multiple tables, it uses an internal sort/merge procedure to join those tables. First, it scans & sorts the first table (the one specified last in FROM clause). Next, it scans the second table (the one prior to the last in the FROM clause) and merges all of the retrieved from the second table with those retrieved from the first table. It takes around 0.96 seconds 
+
+SQL> SELECT EMPNO,ENAME,JOB,SAL,DNAME FROM DEPT,EMP WHERE EMP.DEPTNO = DEPT.DEPTNO;
+
+ANALYSIS
+
+Here driving table is EMP. It takes around 26.09 seconds 
+So, Efficiency is less.
+
+Non-Equi joins 
+--------------
+Getting the information from more than one table without using comparison (=) operator.
+
+CREATE TABLE SALGRADE
+(GRADE NUMBER,
+LOSAL NUMBER,
+HISAL NUMBER);
+
+SQL> select empno,ename,sal,grade,losal,hisal from salgrade g,emp e
+           where e.sal between g.losal and g.hisal;
+
+ANALYSIS
+
+Displays all the employees whose salary lies between any pair of low and high salary ranges.
+INPUT :
+SQL> SELECT * FROM DEPT WHERE DEPTNO NOT IN
+        (SELECT DISTINCT DEPTNO FROM EMP);
+
+ANALYSIS
+Displays the details of the department where there are no employees
+
+OUTER JOIN :
+
+----------------------
+It is a join, which forcibly joins multiple tables even without having the common information. It is represented by +.
+
+SQL> SELECT EMPNO,ENAME,JOB,SAL,DNAME FROM DEPT,EMP
+          WHERE DEPT.DEPTNO = EMP.DEPTNO(+);
+
+LEFT, RIGHT AND FULL OUTER JOIN
+----------------------------------------------------------
+As of Oracle 9i, you can use the ANSI SQL standard syntax for outer joins. In the FROM clause, you can tell Oracle to perform a LEFT, RIGHT or FULL OUTER join. 
+
+SQL> SELECT EMPNO, ENAME, JOB, DEPT.DEPTNO, DNAME FROM EMP
+    LEFT OUTER JOIN DEPT ON DEPT.DEPTNO = EMP.DEPTNO;
+ANALYSIS
+Gets the common information, and forcibly joins from left side table to right side table.
+
+SQL> SELECT EMPNO, ENAME, JOB, DEPT.DEPTNO, DNAME FROM DEPT
+     LEFT OUTER JOIN EMP ON DEPT.DEPTNO = EMP.DEPTNO;
+ANALYSIS
+Gets the common information from both tables, then forcibly joins from dept table to emp table.
+
+SQL> SELECT EMPNO, ENAME, JOB, DEPT.DEPTNO, DNAME FROM DEPT
+     RIGHT OUTER JOIN EMP ON DEPT.DEPTNO = EMP.DEPTNO;
+ANALYSIS
+Gets the common information from both tables, then forcibly joins from dept table to emp table.
+
+SQL> SELECT EMPNO, ENAME, JOB, DEPT.DEPTNO, DNAME FROM EMP
+     RIGHT OUTER JOIN DEPT ON DEPT.DEPTNO = EMP.DEPTNO;
+
+ANALYSIS
+Gets the common information from both tables, then forcibly joins from dept table to emp table.
+
+Position of Joins in where clause
+
+Table joins should be written first before any condition of WHERE clause. And the conditions which filter out the maximum records should be placed at the end after the joins as the parsing is done from BOTTOM to TOP
+
+For ex;
+
+Least Efficient (Total CPU = 153.6 Sec)
+
+SELECT ENAME,JOB,MGR FROM EMP E WHERE SAL > 5000 AND
+ JOB = 'MANAGER’ 
+AND 25 < (SELECT COUNT(*) FROM EMP WHERE MGR = E.EMPNO);
+
+Most Efficient (Total CPU time = 10.6 sec)
+
+SELECT ENAME,JOB,MGR FROM EMP E WHERE 25 < 
+  (SELECT COUNT(*) FROM EMP WHERE MGR = E.EMPNO) 
+AND  SAL > 5000 AND JOB = ‘MANAGER’;
+
+SELF JOIN
+
+Joining the table from itself is called as self join.
+SQL> SELECT WORKER.ENAME || ' IS WORKING UNDER ' || MANAGER.ENAME FROM EMP WORKER, EMP MANAGER WHERE WORKER.MGR = MANAGER.EMPNO;
+
+ANALYSIS
+It displays who is working under whom.
+MGR number appearing against employee is the employee number of manager
+
+NATURAL AND INNER JOINS (Introduced in 9i)
+-----------------------------------------------------------------------

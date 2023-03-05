@@ -1,0 +1,15 @@
+Keys:
+primary key  :
+-----------------
+   ---- unique in the table 
+  --- it represents each row differently.
+-- to make them unique make one of the columns as  a primary
+--- it cannot be null
+--- the best practice is to make a number as your primary key.
+--- primary key, indexing is automatically enabled. retrieval,updation  will be faster.
+--if varchar2 is made as a primary key then the retrieval rate will fall.
+
+Foreign key
+it is key that is refrenced to the parent table 
+it shows how the child table is related to the parent table (1-many,1-1 relationships ..etc).
+when inserting values in the child table the foreign key is checked in the parent table if it is present then the value is inserted or else an error is raised.
